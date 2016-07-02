@@ -19,6 +19,11 @@ import io.realm.Realm;
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
+    //快递条形码扫描RequestCode
+    public static final int CAPTURE_REQ_CODE = 100;
+    //跳转快递公司RequestCode
+    public static final int SELECT_REQ_CODE = 200;
+
     protected Realm realm;
 
     @Override

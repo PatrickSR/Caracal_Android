@@ -1,5 +1,6 @@
 package com.patrick.caracal.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
@@ -91,6 +92,11 @@ public class ExpCompanySelectActivity extends BaseActivity {
         public void onItemClick(View v, IndexEntity indexEntity) {
 //            Log.d(TAG, "onItemClick: "+indexEntity.getName());
             //TODO 点击后，把结果返回到上一个界面
+            //跳转至上界面
+            Intent intent = new Intent();
+            intent.putExtra("SelectExpress", indexEntity.getName());
+            ExpCompanySelectActivity.this.setResult(RESULT_OK, intent);
+            ExpCompanySelectActivity.this.finish();
         }
     };
 }

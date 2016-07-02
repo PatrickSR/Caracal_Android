@@ -19,8 +19,14 @@
     <string name="foreign_name">国外</string>
     <string name="transport_name">转运</string>
     <string name="progress_msg_query">正在查询请稍后..</string>
+    <string name="select_none_error">此单无物流信息</string>
+    <string name="dialog_stream_none_error">此单无物流信息,是否需要保存？</string>
+    <string name="title_activity_select_exp_company">选择快递公司</string>
+    <string name="confirmation">确认</string>
+    <string name="cencel">取消</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_select_exp_company">选择快递公司</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    
+    
 </resources>
