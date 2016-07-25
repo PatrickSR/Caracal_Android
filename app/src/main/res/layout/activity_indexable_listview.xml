@@ -24,7 +24,5 @@
         app:indexBar_textColor="@android:color/darker_gray"
         app:indexBar_textSize="12sp"
         app:indexListView_rightOverlayColor="@color/colorAccent"
-        app:indexListView_type_overlay="right"
-        app:layout_constraintLeft_toLeftOf="@+id/activity_indexable_listview"
-        app:layout_constraintTop_toBottomOf="@+id/searchCompany" />
+        app:indexListView_type_overlay="right" />
 </LinearLayout>
