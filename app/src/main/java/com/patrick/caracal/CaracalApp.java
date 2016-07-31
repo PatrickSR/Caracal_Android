@@ -3,7 +3,6 @@ package com.patrick.caracal;
 import android.app.Application;
 
 import com.jiongbull.jlog.JLog;
-import com.patrick.caracal.model.InitializationData;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -21,9 +20,6 @@ public class CaracalApp extends Application {
         initJLog();
 
         initRealmDB();
-
-        InitializationData initializationData = new InitializationData(this,Realm.getDefaultInstance());
-        initializationData.initRequiredData();
     }
 
     /**

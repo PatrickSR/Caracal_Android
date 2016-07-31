@@ -1,4 +1,4 @@
-package com.patrick.caracal.view.widget;
+package com.patrick.caracal.ui.widget;
 
 import android.animation.Animator;
 import android.support.v7.widget.RecyclerView;

@@ -19,9 +19,17 @@ public class Express extends RealmObject{
     @PrimaryKey
     public String code; //单号
 
-    public String company; //公司编码
+    public String companyCode; //公司编码
+
+    public String companyName; //公司名称
+
+    public int companyType; //公司类型
 
     public int state; //当前状态 2-在途中，3-签收,4-问题件
 
     public RealmList<Trace> traces;
+
+    public String lastAcceptTime;   //最新接应时间
+
+    public String lastAcceptStation;    //最新接应站点
 }

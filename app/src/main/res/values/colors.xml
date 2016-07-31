@@ -41,4 +41,8 @@
     <color name="selected">#38bc1b</color>
     <color name="grey">#d5d5d5</color>
     <color name="black">#000</color>
+
+    <!--Bottom Bar Color-->
+    <color name="bottombar_selected">@color/colorPrimary</color>
+    <color name="bottombar_unselect">#c9c9c9</color>
 </resources>

@@ -1,4 +1,4 @@
-package com.patrick.caracal.view.adapter;
+package com.patrick.caracal.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

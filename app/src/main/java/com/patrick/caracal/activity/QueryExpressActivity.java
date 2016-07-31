@@ -8,10 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -19,17 +17,14 @@ import android.widget.Toast;
 
 import com.google.zxing.activity.CaptureActivity;
 import com.patrick.caracal.R;
-import com.patrick.caracal.entity.Express;
-import com.patrick.caracal.entity.ExpressCompany;
+import com.patrick.caracal.model.Express;
 import com.patrick.caracal.net.KDNiaoAPI;
 import com.rey.material.widget.EditText;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -184,16 +179,16 @@ public class QueryExpressActivity extends BaseActivity {
         // 如果callback到onFailure,弹出一个toast，然后用 showToast 把错误内容显示出来
 
         //根据快递公司名查询快递公司Code
-        RealmResults<ExpressCompany> expressCompanys = realm
-                .where(ExpressCompany.class)
-                .equalTo("name", companyName.getText().toString()).findAll();
-        if (expressCompanys.size() == 1) {
-            try {
-                KDNiaoAPI.queryExp(expressCompanys.get(0).code, inputExpCode.getText().toString(), mCallback);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        RealmResults<ExpressCompany> expressCompanys = realm
+//                .where(ExpressCompany.class)
+//                .equalTo("name", companyName.getText().toString()).findAll();
+//        if (expressCompanys.size() == 1) {
+//            try {
+//                KDNiaoAPI.queryExp(expressCompanys.get(0).code, inputExpCode.getText().toString(), mCallback);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
 
     }
 
@@ -223,8 +218,8 @@ public class QueryExpressActivity extends BaseActivity {
                                 realm.executeTransaction(new Realm.Transaction() {
                                     @Override
                                     public void execute(Realm realm) {
-                                        Express express = realm.createOrUpdateObjectFromJson(Express.class, jsonObject);
-                                        express.localState = Express.LOCAL_STATE_NORMAL;
+//                                        Express express = realm.createOrUpdateObjectFromJson(Express.class, jsonObject);
+//                                        express.localState = Express.LOCAL_STATE_NORMAL;
                                     }
                                 });
 

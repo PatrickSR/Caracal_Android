@@ -11,8 +11,7 @@ import android.view.View;
 
 import com.patrick.caracal.R;
 import com.patrick.caracal.entity.ExpCompanyShowEntity;
-import com.patrick.caracal.model.ExpCompanyModel;
-import com.patrick.caracal.view.adapter.ExpCompanyAdapter;
+import com.patrick.caracal.adapter.ExpCompanyAdapter;
 
 import butterknife.BindView;
 import me.yokeyword.indexablelistview.IndexEntity;
@@ -27,26 +26,21 @@ public class ExpCompanySelectActivity extends BaseActivity {
     @BindView(R.id.listView)
     IndexableStickyListView exp_listview;
 
-    /**
-     * 快递公司有关的model
-     */
-    private ExpCompanyModel expCompanyModel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         initView();
-
-        expCompanyModel = new ExpCompanyModel(this, realm);
+//
+//        expCompanyModel = new ExpCompanyModel(this, realm);
 
         //热门快递公司header,adapter使用
-        IndexHeaderEntity<ExpCompanyShowEntity> hotCompanyHeader = new IndexHeaderEntity<>(
-                "热",
-                "热门快递",
-                expCompanyModel.getHotExpCompany());
-
-        exp_listview.bindDatas(expCompanyModel.getAllExpCompany(),hotCompanyHeader);
+//        IndexHeaderEntity<ExpCompanyShowEntity> hotCompanyHeader = new IndexHeaderEntity<>(
+//                "热",
+//                "热门快递",
+//                expCompanyModel.getHotExpCompany());
+//
+//        exp_listview.bindDatas(expCompanyModel.getAllExpCompany(),hotCompanyHeader);
     }
 
     @Override

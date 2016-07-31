@@ -7,6 +7,10 @@ import io.realm.annotations.PrimaryKey;
  */
 public class Company {
 
+    public static final int TYPE_DOMESTIC = 1;
+    public static final int TYPE_FOREIGN = 2;
+    public static final int TYPE_TRANSPORT = 3;
+
     @PrimaryKey
     public String code; //公司编码
 
