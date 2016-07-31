@@ -1,11 +1,12 @@
 package com.patrick.caracal.model;
 
+import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Patrick on 16/7/26.
  */
-public class Company {
+public class Company extends RealmObject{
 
     public static final int TYPE_DOMESTIC = 1;
     public static final int TYPE_FOREIGN = 2;
