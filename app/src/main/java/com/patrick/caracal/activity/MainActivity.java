@@ -9,7 +9,7 @@ import me.yokeyword.fragmentation.SupportActivity;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
-public class MainActivity2 extends SupportActivity {
+public class MainActivity extends SupportActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

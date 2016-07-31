@@ -9,11 +9,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.jiongbull.jlog.JLog;
+import com.patrick.caracal.Caracal;
 import com.patrick.caracal.R;
 import com.patrick.caracal.entity.ExpCompanyShowEntity;
 import com.patrick.caracal.adapter.ExpCompanyAdapter;
+import com.patrick.caracal.model.Company;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
+import io.realm.RealmResults;
 import me.yokeyword.indexablelistview.IndexEntity;
 import me.yokeyword.indexablelistview.IndexHeaderEntity;
 import me.yokeyword.indexablelistview.IndexableStickyListView;
@@ -26,21 +33,41 @@ public class ExpCompanySelectActivity extends BaseActivity {
     @BindView(R.id.listView)
     IndexableStickyListView exp_listview;
 
+    //全部的快递列表(Adapter显示用的)
+    private List<ExpCompanyShowEntity> expCompanyList = new ArrayList<>();
+
+    //热门的快递列表(Adapter显示用的)
+    private List<ExpCompanyShowEntity> hotCompanyList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         initView();
-//
-//        expCompanyModel = new ExpCompanyModel(this, realm);
+
+        initData();
 
         //热门快递公司header,adapter使用
-//        IndexHeaderEntity<ExpCompanyShowEntity> hotCompanyHeader = new IndexHeaderEntity<>(
-//                "热",
-//                "热门快递",
-//                expCompanyModel.getHotExpCompany());
-//
-//        exp_listview.bindDatas(expCompanyModel.getAllExpCompany(),hotCompanyHeader);
+        IndexHeaderEntity<ExpCompanyShowEntity> hotCompanyHeader = new IndexHeaderEntity<>(
+                "热",
+                "热门快递",
+                hotCompanyList);
+
+        exp_listview.bindDatas(expCompanyList, hotCompanyHeader);
+    }
+
+    private void initData() {
+        RealmResults<Company> hotCompany = Caracal.getInstance().getHotCompany();
+        for (Company c :
+                hotCompany) {
+            hotCompanyList.add(new ExpCompanyShowEntity(c.name,c.code));
+        }
+
+        RealmResults<Company> allCompany = Caracal.getInstance().getAllCompany();
+        for (Company c :
+                allCompany) {
+            expCompanyList.add(new ExpCompanyShowEntity(c.name,c.code));
+        }
     }
 
     @Override
@@ -84,11 +111,12 @@ public class ExpCompanySelectActivity extends BaseActivity {
     private IndexableStickyListView.OnItemContentClickListener onClickExpCompany = new IndexableStickyListView.OnItemContentClickListener() {
         @Override
         public void onItemClick(View v, IndexEntity indexEntity) {
-//            Log.d(TAG, "onItemClick: "+indexEntity.getName());
-            //TODO 点击后，把结果返回到上一个界面
+            ExpCompanyShowEntity entity = (ExpCompanyShowEntity)indexEntity;
+
             //跳转至上界面
             Intent intent = new Intent();
-            intent.putExtra("SelectExpress", indexEntity.getName());
+            intent.putExtra("name", entity.getName());
+            intent.putExtra("code", entity.getCode());
             ExpCompanySelectActivity.this.setResult(RESULT_OK, intent);
             ExpCompanySelectActivity.this.finish();
         }

@@ -15,7 +15,7 @@ public class Company extends RealmObject{
     @PrimaryKey
     public String code; //公司编码
 
-    public String hot;  //是否热门
+    public boolean hot;  //是否热门
 
     public String name; //公司名称
 

@@ -19,7 +19,10 @@ public class CaracalApp extends Application {
 
         initJLog();
 
-        initRealmDB();
+//        initRealmDB();
+        Caracal.init(this);
+
+        Caracal.getInstance().importCompanyFromRAW();
     }
 
     /**

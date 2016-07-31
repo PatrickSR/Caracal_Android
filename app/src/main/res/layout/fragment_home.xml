@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_home_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/home_background_color"
     android:orientation="vertical">
 
     <include layout="@layout/toolbar"/>
@@ -37,19 +35,9 @@
                 app:fab_addButtonColorPressed="@color/white"
                 app:fab_labelStyle="@style/menu_labels_style">
 
-                <com.getbase.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/btn_add_test_data"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:fab_colorNormal="@color/white"
-                    app:fab_colorPressed="@color/white"
-                    app:fab_icon="@drawable/ic_scan_barcode_24dp"
-                    app:fab_title="添加测试数据"
-                    tools:layout_editor_absoluteX="161dp"
-                    tools:layout_editor_absoluteY="123dp" />
 
                 <com.getbase.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/manual_add_express"
+                    android:id="@+id/add_express"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:fab_colorNormal="@color/white"
@@ -65,4 +53,4 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

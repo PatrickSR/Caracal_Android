@@ -13,6 +13,20 @@ public interface HomeContract {
 
     interface View extends BaseView<Presenter>{
 
+        /**
+         * 开始刷新
+         */
+        void startRefresh();
+        /**
+         * 关闭刷新
+         */
+        void closeRefresh();
+
+        /**
+         * 显示快递单
+         * @param results
+         */
+        void showAllExpresss(RealmResults<Express> results);
     }
 
     interface Presenter extends BasePresenter{
@@ -20,12 +34,8 @@ public interface HomeContract {
         /**
          * 更新快递单状态
          */
-        void refresh();
+        void refreshAllExpress();
 
-        /**
-         * 获取全部快递单
-         * @return
-         */
-        RealmResults<Express> getAllExpress();
+
     }
 }

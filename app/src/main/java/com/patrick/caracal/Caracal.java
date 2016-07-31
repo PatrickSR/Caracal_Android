@@ -1,6 +1,8 @@
 package com.patrick.caracal;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.support.annotation.RawRes;
 
 import com.jiongbull.jlog.JLog;
 import com.patrick.caracal.model.Company;
@@ -8,6 +10,7 @@ import com.patrick.caracal.model.Express;
 import com.patrick.caracal.net.Api;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -24,24 +27,42 @@ public class Caracal {
 
     private static Caracal caracal;
 
+    private static Context applicationContext;
+
+    private Context context;
+
     private Api api;
 
-    private Caracal() {
+    private Realm realm;
+
+    private Caracal(Context context) {
         api = new Api();
+        this.context = context;
+        if (realm == null) realm = Realm.getDefaultInstance();
+    }
+
+    private void closeRealm(){
+        if (realm != null) realm.close();
     }
 
     public static Caracal getInstance() {
         if (caracal == null) {
-            caracal = new Caracal();
+            caracal = new Caracal(applicationContext);
         }
         return caracal;
     }
 
     public static void init(Context context) {
+        Caracal.applicationContext = context;
+
         RealmConfiguration config = new RealmConfiguration.Builder(context)
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(config);
+    }
+
+    public static void release(){
+        caracal.closeRealm();
     }
 
     /**
@@ -75,7 +96,6 @@ public class Caracal {
      * @param expNo 快递单号
      */
     public void delExpress(final String expNo) {
-        Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -83,8 +103,6 @@ public class Caracal {
                 if (express != null) {
                     express.deleteFromRealm();
                 }
-
-                realm.close();
             }
         });
     }
@@ -96,19 +114,16 @@ public class Caracal {
 
     // 获取全部快递单
     public void getAllExpress(final ResultCallback<RealmResults<Express>> callback) {
-        Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 callback.onSuccess(realm.where(Express.class).findAll());
-                realm.close();
             }
         });
     }
 
     // 获取单个快递单
     public void getExpress(final String expNo, final ResultCallback<Express> resultCallback) {
-        Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -116,7 +131,6 @@ public class Caracal {
 
                 if (express == null) resultCallback.onFail(new RealmException("找不到快递单：" + expNo));
                 else resultCallback.onSuccess(express);
-                realm.close();
             }
         });
     }
@@ -140,7 +154,6 @@ public class Caracal {
 
     // 根据快递公司编码查询公司信息
     public void queryCompany(final String companyCode, final ResultCallback<Company> resultCallback) {
-        Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -149,10 +162,25 @@ public class Caracal {
                 if (company == null)
                     resultCallback.onFail(new RealmException("找不到公司：" + companyCode));
                 else resultCallback.onSuccess(company);
-                realm.close();
             }
         });
 
+    }
+
+    /**
+     * 查询全部快递公司
+     */
+    public RealmResults<Company> getAllCompany(){
+        return realm.where(Company.class).findAll();
+    }
+
+    /**
+     * 查询热门快递公司
+     */
+    public RealmResults<Company> getHotCompany(){
+        return realm.where(Company.class)
+                .equalTo("hot",true)
+                .findAll();
     }
 
     /**
@@ -162,14 +190,11 @@ public class Caracal {
      * 仅仅获取 state != 3的单号，因为这些是还没完成的快递单
      */
     public void refresh() {
-        Realm realm = Realm.getDefaultInstance();
-
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 RealmResults<Express> results = realm.where(Express.class).notEqualTo("state", 3).findAll();
                 networkRefresh(results);
-                realm.close();
             }
         });
     }
@@ -179,7 +204,7 @@ public class Caracal {
 
         for (final Express express :
                 expresses) {
-            api.query(express.code, express.company, new Callback() {
+            api.query(express.code, express.companyCode, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     JLog.e("刷新快递失败：" + express.code);
@@ -202,6 +227,75 @@ public class Caracal {
         }
     }
 
+
+    /**
+     * 从raw导入公司信息
+     */
+    public void importCompanyFromRAW(){
+        //如果本地没有公司信息，就把raw目录的json文件导入
+        if (realm.where(Company.class).findAll().isEmpty()) {
+            realm.executeTransaction(loadDomesticExp); //国内数据
+            realm.executeTransaction(loadForeignExp); //国外数据
+            realm.executeTransaction(loadTransportExp); //转运数据
+        }
+    }
+
+    /**
+     * 导入国内快递
+     */
+    private Realm.Transaction loadDomesticExp = new Realm.Transaction() {
+        @Override
+        public void execute(Realm realm) {
+            try {
+                InputStream inputStream = getRawJsonFile(R.raw.domestic_express);
+                realm.createAllFromJson(Company.class, inputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    /**
+     * 导入国外快递
+     */
+    private Realm.Transaction loadForeignExp = new Realm.Transaction() {
+        @Override
+        public void execute(Realm realm) {
+            try {
+                InputStream inputStream = getRawJsonFile(R.raw.foreign_express);
+                realm.createAllFromJson(Company.class, inputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    /**
+     * 导入中转物流
+     */
+    private Realm.Transaction loadTransportExp = new Realm.Transaction() {
+        @Override
+        public void execute(Realm realm) {
+            try {
+                InputStream inputStream = getRawJsonFile(R.raw.transport_express);
+                realm.createAllFromJson(Company.class, inputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
+
+    /**
+     * 获取raw目录下的文件流
+     * @param res raw文件夹的文件
+     * @return
+     * @throws Resources.NotFoundException
+     */
+    private InputStream getRawJsonFile(@RawRes int res) throws Resources.NotFoundException {
+        return context.getResources().openRawResource(res);
+    }
+
     //////////////////////////////////////////////////////////////////////////////
     //////////////////////////////Callback////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////
@@ -211,10 +305,10 @@ public class Caracal {
      *
      * @param <T>
      */
-    public abstract static class ResultCallback<T> {
-        abstract void onSuccess(T t);
+    public interface ResultCallback<T> {
+        void onSuccess(T t);
 
-        abstract void onFail(Exception e);
+        void onFail(Exception e);
     }
 
 }

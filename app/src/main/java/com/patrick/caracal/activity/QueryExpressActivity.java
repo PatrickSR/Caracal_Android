@@ -13,26 +13,16 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.zxing.activity.CaptureActivity;
+import com.jiongbull.jlog.JLog;
+import com.patrick.caracal.Caracal;
 import com.patrick.caracal.R;
-import com.patrick.caracal.model.Express;
-import com.patrick.caracal.net.KDNiaoAPI;
 import com.rey.material.widget.EditText;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.realm.Realm;
-import io.realm.RealmResults;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 /**
  * Created by junz on 2016/6/18.
@@ -41,8 +31,7 @@ import okhttp3.Response;
 
 public class QueryExpressActivity extends BaseActivity {
 
-    private Dialog mDialog;
-    private String streamInfo;
+//    private Dialog mDialog;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -74,12 +63,12 @@ public class QueryExpressActivity extends BaseActivity {
                 Bundle bundle = data.getExtras();
                 String scanResult = bundle.getString("result");
                 inputExpCode.setText(scanResult);
-                Toast.makeText(QueryExpressActivity.this, scanResult, Toast.LENGTH_LONG).show();
+//                Toast.makeText(QueryExpressActivity.this, scanResult, Toast.LENGTH_LONG).show();
             } else if (requestCode == SELECT_REQ_CODE) {
                 //选择快递公司结果
-                String selectExpressResult = data.getStringExtra("SelectExpress");
-                companyName.setText(selectExpressResult);
-                Toast.makeText(QueryExpressActivity.this, selectExpressResult, Toast.LENGTH_SHORT).show();
+                companyName.setText(data.getStringExtra("name"));
+                companyCode = data.getStringExtra("code");
+//                Toast.makeText(QueryExpressActivity.this, selectExpressResult, Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -99,6 +88,9 @@ public class QueryExpressActivity extends BaseActivity {
         startActivityForResult(intent, SELECT_REQ_CODE);
     }
 
+    //快递公司编码
+    private String companyCode;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,23 +98,23 @@ public class QueryExpressActivity extends BaseActivity {
         setSupportActionBar(toolbar);
 
         //弹框
-        mDialog = new AlertDialog.Builder(this)
-                .setMessage(getString(R.string.dialog_stream_none_error))
-                .setPositiveButton(getString(R.string.confirmation),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                saveOrUpdateData();
-                                mDialog.dismiss();
-                            }
-                        })
-                .setNegativeButton(getString(R.string.cencel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        streamInfo = null;
-                        mDialog.dismiss();
-                    }
-                }).create();
+//        mDialog = new AlertDialog.Builder(this)
+//                .setMessage(getString(R.string.dialog_stream_none_error))
+//                .setPositiveButton(getString(R.string.confirmation),
+//                        new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                saveOrUpdateData();
+//                                mDialog.dismiss();
+//                            }
+//                        })
+//                .setNegativeButton(getString(R.string.cencel), new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        streamInfo = null;
+//                        mDialog.dismiss();
+//                    }
+//                }).create();
     }
 
     @Override
@@ -140,114 +132,59 @@ public class QueryExpressActivity extends BaseActivity {
         }
         return true;
     }
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 1:
-                    mDialog.show();
-                    break;
-                case 2:
-//                    saveOrUpdateData();
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
-
     /**
      * 将查询结果进行保存
      */
-    private void saveOrUpdateData() {
-        realm.beginTransaction();
-        realm.createOrUpdateAllFromJson(Express.class, "[" + streamInfo + "]");
-        realm.commitTransaction();
-        QueryExpressActivity.this.setResult(RESULT_OK);
-        QueryExpressActivity.this.finish();
-    }
+//    private void saveOrUpdateData() {
+//        realm.beginTransaction();
+//        realm.createOrUpdateAllFromJson(Express.class, "[" + streamInfo + "]");
+//        realm.commitTransaction();
+//        QueryExpressActivity.this.setResult(RESULT_OK);
+//        QueryExpressActivity.this.finish();
+//    }
 
     /**
      * 添加快递
      */
     private void addExpress() {
-        // TODO 检查快递单和公司是否有选
-        // 调用KDNiaoAPI.queryExp()进行查询快递
-        // 在callback中，success就把结果保存到Realm
-        // 如果callback到onFailure,弹出一个toast，然后用 showToast 把错误内容显示出来
+        //检查快递单号和快递公司
+        String expCode = inputExpCode.getText().toString();
 
-        //根据快递公司名查询快递公司Code
-//        RealmResults<ExpressCompany> expressCompanys = realm
-//                .where(ExpressCompany.class)
-//                .equalTo("name", companyName.getText().toString()).findAll();
-//        if (expressCompanys.size() == 1) {
-//            try {
-//                KDNiaoAPI.queryExp(expressCompanys.get(0).code, inputExpCode.getText().toString(), mCallback);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
+        if (TextUtils.isEmpty(expCode)){
+            showToast("请输入快递单号");
+            return;
+        }
 
+        if (TextUtils.isEmpty(this.companyCode)){
+            //如果公司编号是空，先去查询快递单归属
+            queryExpressFrom(expCode);
+        }else{
+            //订阅快递
+            subExpress(expCode,this.companyCode);
+        }
     }
 
-    //快递查询Callback
-    private Callback mCallback = new Callback() {
-        @Override
-        public void onFailure(Call call, IOException e) {
-            showToast(e.toString());
-        }
-
-        @Override
-        public void onResponse(Call call, Response response) throws IOException {
-            if (response.code() == 200) {
-
-                streamInfo = response.body().string();
-                String streamReason = null;
-                try {
-                    final JSONObject jsonObject = new JSONObject(streamInfo);
-                    if (!TextUtils.isEmpty(jsonObject.optString("Reason"))) {
-                        //如果Reason不为空
-                        showToast(jsonObject.optString("Reason"));
-                        mHandler.sendEmptyMessage(1);
-                    } else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                realm.executeTransaction(new Realm.Transaction() {
-                                    @Override
-                                    public void execute(Realm realm) {
-//                                        Express express = realm.createOrUpdateObjectFromJson(Express.class, jsonObject);
-//                                        express.localState = Express.LOCAL_STATE_NORMAL;
-                                    }
-                                });
-
-                                QueryExpressActivity.this.setResult(RESULT_OK);
-                                QueryExpressActivity.this.finish();
-                            }
-                        });
 
 
-                    }
-//                    streamReason = jsonObject.get("Reason").toString();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                //TODO 不可以拿文字做判断
-//                if (streamReason != null && streamReason.equals(getString(R.string.select_none_error))){
-//                    showToast(getString(R.string.select_none_error));
-
-                //TODO 不要出现莫名数字,定义常量或枚举来解决,推荐前者
-//                    mHandler.sendEmptyMessage(1);
-//                }else {
-//                    mHandler.sendEmptyMessage(2);
-//                }
-
-//                Log.i("mCallback", "onResponse: " + streamInfo);
+    private void queryExpressFrom(String expCode) {
+        Caracal.getInstance().queryExpressCompany(expCode, new Caracal.ResultCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                //弹框选择
+                JLog.d("Receive : <--- "+s);
             }
-        }
-    };
+
+            @Override
+            public void onFail(Exception e) {
+                JLog.e(e);
+                showToast(e.getMessage());
+            }
+        });
+    }
+
+    private void subExpress(String expCode, String companyCode) {
+    }
+
 
     @Override
     int layout() {

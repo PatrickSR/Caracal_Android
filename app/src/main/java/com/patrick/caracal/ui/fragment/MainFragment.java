@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.patrick.caracal.R;
 import com.patrick.caracal.event.StartFragmentEvent;
 import com.patrick.caracal.event.TabSelectedEvent;
+import com.patrick.caracal.presenter.HomePresenter;
 import com.patrick.caracal.ui.view.BottomBar;
 import com.patrick.caracal.ui.view.BottomBarTab;
 
@@ -31,6 +32,7 @@ public class MainFragment extends BaseFragment{
 
     private BottomBar mBottomBar;
 
+    private HomePresenter homePresenter;
 
     public static MainFragment newInstance() {
 
@@ -55,6 +57,8 @@ public class MainFragment extends BaseFragment{
                     mFragments[FIRST],
                     mFragments[SECOND],
                     mFragments[THIRD]);
+
+
         } else {
             // 这里库已经做了Fragment恢复,所有不需要额外的处理了, 不会出现重叠问题
 
@@ -65,7 +69,16 @@ public class MainFragment extends BaseFragment{
         }
 
         initView(view);
+        initPresenter();
         return view;
+    }
+
+    /**
+     * 初始化Presenter
+     */
+    private void initPresenter() {
+        homePresenter = new HomePresenter((HomeFragment)mFragments[FIRST]);
+
     }
 
     private void initView(View view) {

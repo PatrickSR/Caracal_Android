@@ -1,5 +1,6 @@
 package com.patrick.caracal.ui.fragment;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,14 +13,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.patrick.caracal.R;
+import com.patrick.caracal.activity.QueryExpressActivity;
 import com.patrick.caracal.adapter.ExpressAdapter;
-import com.patrick.caracal.adapter.OnItemClickListener;
 
+import com.patrick.caracal.adapter.OnItemClickListener;
+import com.patrick.caracal.contract.HomeContract;
 import com.patrick.caracal.event.TabSelectedEvent;
+import com.patrick.caracal.model.Express;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.realm.RealmResults;
 
 
 /**
@@ -27,10 +37,29 @@ import org.greenrobot.eventbus.Subscribe;
  *
  * 首页，显示快递列表
  */
-public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLayout.OnRefreshListener {
-    private Toolbar mToolbar;
-    private SwipeRefreshLayout mRefreshLayout;
-    private RecyclerView recyclerview;
+public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLayout.OnRefreshListener,HomeContract.View {
+
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+
+    @BindView(R.id.recycler)
+    RecyclerView recyclerview;
+
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout mRefreshLayout;
+
+    @BindView(R.id.multiple_actions)
+    FloatingActionsMenu multiple_actions;
+
+    @OnClick(R.id.add_express)
+    void manualAddExpressNumber() {
+        Intent intent = new Intent(getActivity(), QueryExpressActivity.class);
+        startActivityForResult(intent, 100);
+
+        multiple_actions.collapse();
+    }
+
+    private HomeContract.Presenter presenter;
 
     private boolean mInAtTop = true;
     private int mScrollTotal;
@@ -50,19 +79,11 @@ public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLa
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        initView(view);
-        return view;
-    }
 
-    private void initView(View view) {
-        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        mRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
-        recyclerview = (RecyclerView) view.findViewById(R.id.recycler);
-
-        EventBus.getDefault().register(this);
-
+        ButterKnife.bind(this,view);
         mToolbar.setTitle("首页");
-//        initToolbarMenu(mToolbar);
+        EventBus.getDefault().register(this);
+        return view;
     }
 
     @Override
@@ -78,20 +99,19 @@ public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLa
                 outRect.set(0, 0, 0, space);
             }
         });
-//        recyclerview.setAdapter(adapter);
 //
-//        recyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                mScrollTotal += dy;
-//                if (mScrollTotal <= 0) {
-//                    mInAtTop = true;
-//                } else {
-//                    mInAtTop = false;
-//                }
-//            }
-//        });
+        recyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                mScrollTotal += dy;
+                if (mScrollTotal <= 0) {
+                    mInAtTop = true;
+                } else {
+                    mInAtTop = false;
+                }
+            }
+        });
 
 //        adapter.setOnItemClickListener(new OnItemClickListener() {
 //            @Override
@@ -113,12 +133,18 @@ public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLa
      */
     @Override
     public void onRefresh() {
-        mRefreshLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mRefreshLayout.setRefreshing(false);
-            }
-        }, 2500);
+        presenter.refreshAllExpress();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.start();
+    }
+
+    @Override
+    protected void onFragmentResult(int requestCode, int resultCode, Bundle data) {
+
     }
 
     /**
@@ -147,4 +173,39 @@ public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLa
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void setPresenter(HomeContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void startRefresh() {
+        if (mRefreshLayout != null) {
+            mRefreshLayout.setRefreshing(true);
+        }
+    }
+
+    @Override
+    public void closeRefresh() {
+        if (mRefreshLayout != null) {
+            mRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    /**
+     * 显示全部快递列表
+     * @param results
+     */
+    @Override
+    public void showAllExpresss(RealmResults<Express> results) {
+        adapter = new ExpressAdapter(getContext(),results,true);
+        recyclerview.setAdapter(this.adapter);
+
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(int position, View view, RecyclerView.ViewHolder viewHolder) {
+
+            }
+        });
+    }
 }

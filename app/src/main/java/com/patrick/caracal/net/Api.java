@@ -5,6 +5,8 @@ import com.jiongbull.jlog.JLog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -29,7 +31,16 @@ public class Api {
     private static final String QUERY_EXPRESS_FROM_URL = API_URL + "queryExpressFrom";
 
 
-    private static final OkHttpClient client = new OkHttpClient();
+    private OkHttpClient client;
+
+    public Api(){
+        //设置60s超时
+        client = new OkHttpClient.Builder()
+                .connectTimeout(60,TimeUnit.SECONDS)
+                .readTimeout(60,TimeUnit.SECONDS)
+                .writeTimeout(60,TimeUnit.SECONDS)
+                .build();
+    }
 
     /**
      * 查询快递

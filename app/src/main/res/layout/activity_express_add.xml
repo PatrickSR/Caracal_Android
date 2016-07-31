@@ -15,11 +15,11 @@
         app:title="添加快递单"
         app:titleTextColor="@android:color/white" />
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_margin="10dp"
-        android:layout_height="100dp">
-
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,9 +29,9 @@
             <com.rey.material.widget.EditText
                 android:id="@+id/input_exp_code"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_weight="4"
-                android:hint="请输入快递单"
+                android:hint="快递单号"
                 android:inputType="text"
                 app:et_dividerColor="@color/divider"
                 app:et_dividerHeight="1dp"
@@ -44,8 +44,8 @@
 
             <ImageView
                 android:id="@+id/scan_exp_code"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/shape_gray_round"
                 android:padding="6dp"
@@ -55,12 +55,23 @@
         <TextView
             android:id="@+id/choose_exp_company"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="50dp"
+            android:gravity="center|left"
             android:layout_gravity="bottom"
             android:layout_marginLeft="6dp"
             android:drawableLeft="@drawable/ic_express_gray"
             android:padding="6dp"
             android:text="  请选择快递公司" />
-    </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center|left"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="6dp"
+            android:drawableLeft="@drawable/ic_tips_24dp"
+            android:padding="6dp"
+            android:text="  提示：若未选择快递公司，会尝试自动匹配" />
+    </LinearLayout>
 
 </LinearLayout>
