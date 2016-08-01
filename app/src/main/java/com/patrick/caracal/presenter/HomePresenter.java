@@ -5,6 +5,7 @@ import com.patrick.caracal.Caracal;
 import com.patrick.caracal.contract.HomeContract;
 import com.patrick.caracal.model.Express;
 
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 /**
@@ -23,7 +24,8 @@ public class HomePresenter implements HomeContract.Presenter {
 
     @Override
     public void refreshAllExpress() {
-
+        //刷新全部快递
+        Caracal.getInstance().refresh();
     }
 
 
@@ -37,6 +39,9 @@ public class HomePresenter implements HomeContract.Presenter {
                 HomePresenter.this.view.closeRefresh();
 
                 HomePresenter.this.allExpress = results;
+
+                //添加数据监听
+                HomePresenter.this.allExpress.addChangeListener(listener);
                 view.showAllExpresss(HomePresenter.this.allExpress);
             }
 
@@ -47,4 +52,16 @@ public class HomePresenter implements HomeContract.Presenter {
             }
         });
     }
+
+    RealmChangeListener<RealmResults<Express>> listener = new RealmChangeListener<RealmResults<Express>>() {
+        @Override
+        public void onChange(RealmResults<Express> element) {
+            //如果数据发生变化
+            //关闭刷新的view
+
+            if (view != null){
+                view.closeRefresh();
+            }
+        }
+    };
 }

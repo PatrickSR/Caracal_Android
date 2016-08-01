@@ -19,7 +19,8 @@ import okhttp3.RequestBody;
 public class Api {
 
     //Api地址
-    private static final String API_URL = "http://www.caracal.club/api/";
+//    private static final String API_URL = "http://www.caracal.club/api/";
+    private static final String API_URL = "http://103.214.140.181:3000/api/";
 
     //订阅地址
     private static final String SUBSCRIBE_URL = API_URL + "subscribe";

@@ -37,6 +37,7 @@ dependencies {
     compile 'com.jiongbull:jlog:1.0.5'
     compile 'me.yokeyword:indexablestickylistview:0.6.1'
     compile 'com.github.rey5137:material:1.2.4'
+    compile 'com.orhanobut:dialogplus:1.11@aar'
 
     compile 'io.realm:android-adapters:1.2.1'
 

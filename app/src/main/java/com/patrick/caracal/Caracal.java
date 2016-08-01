@@ -68,8 +68,8 @@ public class Caracal {
     /**
      * 添加/订阅 快递
      */
-    public void subExpress(String expNo, String company, final ResultCallback<String> resultCallback) {
-        api.subscribe(expNo, company, new Callback() {
+    public void subExpress(final String expNo, final String companyCode,final String companyName, final ResultCallback<String> resultCallback) {
+        api.subscribe(expNo, companyCode, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 resultCallback.onFail(e);
@@ -83,6 +83,13 @@ public class Caracal {
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
+
+                        Express express = new Express();
+                        express.code =expNo;
+                        express.companyCode = companyCode;
+                        express.companyName = companyName;
+
+                        realm.copyToRealmOrUpdate(express);
                     }
                 });
                 resultCallback.onSuccess(resp);
@@ -199,7 +206,10 @@ public class Caracal {
         });
     }
 
-
+    /**
+     * 进行网络刷新
+     * @param expresses
+     */
     private void networkRefresh(RealmResults<Express> expresses) {
 
         for (final Express express :

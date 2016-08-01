@@ -12,6 +12,13 @@ public class Company extends RealmObject{
     public static final int TYPE_FOREIGN = 2;
     public static final int TYPE_TRANSPORT = 3;
 
+    public Company(){}
+
+    public Company(String code,String name){
+        this.code = code;
+        this.name = name;
+    }
+
     @PrimaryKey
     public String code; //公司编码
 
