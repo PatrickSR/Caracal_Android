@@ -51,6 +51,8 @@ public class HomePresenter implements HomeContract.Presenter {
                 HomePresenter.this.view.closeRefresh();
             }
         });
+
+        Caracal.getInstance().refresh();
     }
 
     RealmChangeListener<RealmResults<Express>> listener = new RealmChangeListener<RealmResults<Express>>() {

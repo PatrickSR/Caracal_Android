@@ -198,6 +198,11 @@ public class QueryExpressActivity extends BaseActivity {
 
             ArrayList<Company> list = new ArrayList<>();
 
+            if (companies.length() < 1) {
+                showToast("暂时无法识别该快递单公司");
+                return;
+            }
+
             for (int i = 0; i < companies.length(); i++) {
                 String code = companies.getJSONObject(i).optString("code", "");
                 String name = companies.getJSONObject(i).optString("name", "");

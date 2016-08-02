@@ -3,11 +3,15 @@ package com.patrick.caracal;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.RawRes;
+import android.text.TextUtils;
 
 import com.jiongbull.jlog.JLog;
 import com.patrick.caracal.model.Company;
 import com.patrick.caracal.model.Express;
 import com.patrick.caracal.net.Api;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -224,18 +228,38 @@ public class Caracal {
                 public void onResponse(Call call, Response response) throws IOException {
                     if (response.code() == 200) {
                         final String resp = response.body().string();
-                        Realm realm = Realm.getDefaultInstance();
-                        realm.executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                realm.createOrUpdateObjectFromJson(Express.class,resp);
+                        JLog.d("刷新快递 <---- "+resp);
+
+                        if (resp.equals("null")|| TextUtils.isEmpty(resp)) return;
+
+                        try {
+                            JSONObject jsonResp = new JSONObject(resp);
+
+                            if (jsonResp.has("error")){
+                                //有错误
+                                JLog.e(jsonResp.getString("error"));
+                                return;
                             }
-                        });
+
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    realm.createOrUpdateObjectFromJson(Express.class,resp);
+                                }
+                            });
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
                     }
                 }
             });
         }
     }
+
 
 
     /**
