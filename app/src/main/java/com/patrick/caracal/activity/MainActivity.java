@@ -29,7 +29,6 @@ public class MainActivity extends SupportActivity {
             mainFragment = MainFragment.newInstance();
             loadRootFragment(R.id.container, mainFragment);
 
-            initPresenter();
         }
     }
 
@@ -47,23 +46,30 @@ public class MainActivity extends SupportActivity {
         return new DefaultHorizontalAnimator();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        initPresenter();
+    }
+
     /**
      * 启动其他fragment
      */
-    @Subscribe
-    public void startBrother(StartFragmentEvent event) {
-        start(event.targetFragment);
-    }
+//    @Subscribe
+//    public void startBrother(StartFragmentEvent event) {
+//        start(event.targetFragment);
+//    }
 
     @Override
     protected void onResume() {
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
         super.onPause();
     }
 }

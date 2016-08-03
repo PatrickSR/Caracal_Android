@@ -20,6 +20,7 @@ import com.patrick.caracal.adapter.ExpressAdapter;
 
 import com.patrick.caracal.adapter.OnItemClickListener;
 import com.patrick.caracal.contract.HomeContract;
+import com.patrick.caracal.event.StartFragmentEvent;
 import com.patrick.caracal.event.TabSelectedEvent;
 import com.patrick.caracal.model.Express;
 
@@ -116,14 +117,14 @@ public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLa
 //        adapter.setOnItemClickListener(new OnItemClickListener() {
 //            @Override
 //            public void onItemClick(int position, View view, RecyclerView.ViewHolder vh) {
-                // 因为启动的MsgFragment是MainFragment的兄弟Fragment,所以需要MainFragment.start()
-
-                // 这里我使用EventBus通知父MainFragment处理跳转(接耦),
-//                EventBus.getDefault().post(new StartFragmentEvent(MsgFragment.newInstance(mAdapter.getMsg(position))));
-//                EventBus.getDefault().post(new StartFragmentEvent(MsgFragment.newInstance(mAdapter.getMsg(position))));
-
-                // 也可以像使用getParentFragment()的方式,拿到父Fragment的引用来操作 (不建议)
-//              ((MainFragment) getParentFragment()).startMsgBrother(MsgFragment.newInstance());
+//                // 因为启动的MsgFragment是MainFragment的兄弟Fragment,所以需要MainFragment.start()
+//
+//                // 这里我使用EventBus通知父MainFragment处理跳转(接耦),
+////                EventBus.getDefault().post(new StartFragmentEvent(MsgFragment.newInstance(mAdapter.getMsg(position))));
+//
+//
+//                // 也可以像使用getParentFragment()的方式,拿到父Fragment的引用来操作 (不建议)
+////              ((MainFragment) getParentFragment()).startMsgBrother(MsgFragment.newInstance());
 //            }
 //        });
     }
@@ -139,7 +140,8 @@ public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLa
     @Override
     public void onResume() {
         super.onResume();
-        presenter.start();
+        if (presenter!=null)
+            presenter.start();
     }
 
     @Override
@@ -204,7 +206,12 @@ public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLa
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View view, RecyclerView.ViewHolder viewHolder) {
+                Bundle bundle = new Bundle();
 
+                Express exp = adapter.getData().get(position);
+                bundle.putString("expCode",exp.code);
+
+                EventBus.getDefault().post(new StartFragmentEvent(ExpressDetailsFragment.newInstance(),bundle));
             }
         });
     }

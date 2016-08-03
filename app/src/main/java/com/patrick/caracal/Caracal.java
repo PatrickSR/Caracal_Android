@@ -252,8 +252,6 @@ public class Caracal {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-
                     }
                 }
             });
