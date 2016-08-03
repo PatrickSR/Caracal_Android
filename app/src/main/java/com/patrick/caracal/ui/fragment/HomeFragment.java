@@ -54,7 +54,7 @@ public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLa
     @OnClick(R.id.add_express)
     void manualAddExpressNumber() {
         Intent intent = new Intent(getActivity(), QueryExpressActivity.class);
-        startActivityForResult(intent, 100);
+            startActivityForResult(intent, 100);
 
         multiple_actions.collapse();
     }

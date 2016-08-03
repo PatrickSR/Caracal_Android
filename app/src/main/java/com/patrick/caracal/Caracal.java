@@ -3,11 +3,15 @@ package com.patrick.caracal;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.RawRes;
+import android.text.TextUtils;
 
 import com.jiongbull.jlog.JLog;
 import com.patrick.caracal.model.Company;
 import com.patrick.caracal.model.Express;
 import com.patrick.caracal.net.Api;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,8 +72,8 @@ public class Caracal {
     /**
      * 添加/订阅 快递
      */
-    public void subExpress(String expNo, String company, final ResultCallback<String> resultCallback) {
-        api.subscribe(expNo, company, new Callback() {
+    public void subExpress(final String expNo, final String companyCode,final String companyName, final ResultCallback<String> resultCallback) {
+        api.subscribe(expNo, companyCode, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 resultCallback.onFail(e);
@@ -83,6 +87,13 @@ public class Caracal {
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
+
+                        Express express = new Express();
+                        express.code =expNo;
+                        express.companyCode = companyCode;
+                        express.companyName = companyName;
+
+                        realm.copyToRealmOrUpdate(express);
                     }
                 });
                 resultCallback.onSuccess(resp);
@@ -199,7 +210,10 @@ public class Caracal {
         });
     }
 
-
+    /**
+     * 进行网络刷新
+     * @param expresses
+     */
     private void networkRefresh(RealmResults<Express> expresses) {
 
         for (final Express express :
@@ -214,18 +228,38 @@ public class Caracal {
                 public void onResponse(Call call, Response response) throws IOException {
                     if (response.code() == 200) {
                         final String resp = response.body().string();
-                        Realm realm = Realm.getDefaultInstance();
-                        realm.executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                realm.createOrUpdateObjectFromJson(Express.class,resp);
+                        JLog.d("刷新快递 <---- "+resp);
+
+                        if (resp.equals("null")|| TextUtils.isEmpty(resp)) return;
+
+                        try {
+                            JSONObject jsonResp = new JSONObject(resp);
+
+                            if (jsonResp.has("error")){
+                                //有错误
+                                JLog.e(jsonResp.getString("error"));
+                                return;
                             }
-                        });
+
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    realm.createOrUpdateObjectFromJson(Express.class,resp);
+                                }
+                            });
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
                     }
                 }
             });
         }
     }
+
 
 
     /**
