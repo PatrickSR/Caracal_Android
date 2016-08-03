@@ -9,10 +9,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.jiongbull.jlog.JLog;
 import com.patrick.caracal.Caracal;
 import com.patrick.caracal.R;
-import com.patrick.caracal.entity.ExpCompanyShowEntity;
+import com.patrick.caracal.model.ExpCompanyShowEntity;
 import com.patrick.caracal.adapter.ExpCompanyAdapter;
 import com.patrick.caracal.model.Company;
 

@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.patrick.caracal.R;
-import com.patrick.caracal.entity.ExpCompanyShowEntity;
+import com.patrick.caracal.model.ExpCompanyShowEntity;
 import me.yokeyword.indexablelistview.IndexableAdapter;
 
 /**

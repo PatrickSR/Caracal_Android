@@ -1,4 +1,4 @@
-package com.patrick.caracal.entity;
+package com.patrick.caracal.model;
 
 import me.yokeyword.indexablelistview.IndexEntity;
 

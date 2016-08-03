@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import com.patrick.caracal.R;
 import com.patrick.caracal.event.StartFragmentEvent;
 import com.patrick.caracal.event.TabSelectedEvent;
-import com.patrick.caracal.presenter.HomePresenter;
 import com.patrick.caracal.ui.view.BottomBar;
 import com.patrick.caracal.ui.view.BottomBarTab;
 
@@ -32,7 +31,7 @@ public class MainFragment extends BaseFragment{
 
     private BottomBar mBottomBar;
 
-    private HomePresenter homePresenter;
+
 
     public static MainFragment newInstance() {
 
@@ -69,16 +68,23 @@ public class MainFragment extends BaseFragment{
         }
 
         initView(view);
-        initPresenter();
         return view;
     }
 
     /**
-     * 初始化Presenter
+     * 获取主页fragment
+     * @return
      */
-    private void initPresenter() {
-        homePresenter = new HomePresenter((HomeFragment)mFragments[FIRST]);
+    public HomeFragment getHomeFragment(){
+        return (HomeFragment)mFragments[FIRST];
+    }
 
+    public SendExpressFragment getSendExpressFragment(){
+        return (SendExpressFragment)mFragments[SECOND];
+    }
+
+    public OwnFragment getOwnFragment(){
+        return (OwnFragment)mFragments[THIRD];
     }
 
     private void initView(View view) {
