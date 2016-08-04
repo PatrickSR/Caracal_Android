@@ -53,12 +53,28 @@ public class ExpressDetailsFragment extends BaseBackFragment implements ExpressD
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_express_details, container, false);
         ButterKnife.bind(this,view);
-        initToolbarNav(toolbar);
         view_timeline.setLayoutManager(new LinearLayoutManager(getContext()));
         view_timeline.setHasFixedSize(true);
 
-        toolbar.setTitle("查看详情");
+        initToolbar();
+
         return attachToSwipeBack(view);
+    }
+
+    /**
+     * 初始化toolbar
+     */
+    private void initToolbar(){
+        initToolbarNav(toolbar);
+        toolbar.setTitle("查看详情");
+        initMenu();
+    }
+
+    /**
+     * 初始化右上角menu
+     */
+    private void initMenu() {
+        toolbar.inflateMenu(R.menu.menu_details_fragment);
     }
 
     @Override

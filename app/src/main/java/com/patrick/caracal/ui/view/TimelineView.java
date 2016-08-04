@@ -44,8 +44,9 @@ public class TimelineView extends View {
         mMarkerInCenter = typedArray.getBoolean(R.styleable.timeline_style_markerInCenter, true);
         typedArray.recycle();
 
+
         if(mMarker == null) {
-            mMarker = mContext.getResources().getDrawable(R.drawable.circel_marker);
+            mMarker = mContext.getResources().getDrawable(R.drawable.circel_marker_normal);
         }
     }
 

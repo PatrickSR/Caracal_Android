@@ -1,6 +1,7 @@
 package com.patrick.caracal.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +84,19 @@ public class TimeLineAdapter extends RealmRecyclerViewAdapter<Trace,TimeLineAdap
             ButterKnife.bind(this, itemView);
 
             timeline.initLine(lineType);
+
+            if (lineType == TimelineView.LineType.BEGIN){
+//                timeline.setStartLine();
+
+                Context context = itemView.getContext();
+//                ColorDrawable colorDrawable = new ColorDrawable(context.getResources().getColor(R.color.colorPrimary));
+//                timeline.setStartLine(colorDrawable);
+//                timeline.setEndLine(colorDrawable);
+                acceptStation.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+                acceptTime.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+
+                timeline.setMarker(context.getResources().getDrawable(R.drawable.circel_marker_updated));
+            }
         }
 
         public ViewHolder(View headView){
