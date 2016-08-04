@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="horizontal">
+
+    <com.patrick.caracal.ui.view.TimelineView
+        android:id="@+id/timeline"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingLeft="16dp"
+        app:line="@color/colorPrimary"
+        app:line_size="4dp"
+        app:marker="@drawable/circel_marker"
+        app:marker_size="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/acceptStation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="客户 签收人 : 快递箱 已签收 感谢使用圆通速递，期待再次为您服务"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/acceptTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="2016-04-01 03:21:36" />
+    </LinearLayout>
+</LinearLayout>

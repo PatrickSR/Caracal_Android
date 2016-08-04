@@ -2,6 +2,9 @@ package com.patrick.caracal.contract;
 
 import com.patrick.caracal.BasePresenter;
 import com.patrick.caracal.BaseView;
+import com.patrick.caracal.model.Trace;
+
+import io.realm.RealmList;
 
 /**
  * Created by Patrick on 16/8/3.
@@ -18,8 +21,7 @@ public interface ExpressDetailsContract {
         //隐藏删除提示dialog
         void hideDelDialog();
 
-
-        void showTimeLine();
+        void setupDetails(RealmList<Trace> traces);
 
     }
 
@@ -29,6 +31,7 @@ public interface ExpressDetailsContract {
         void attemptDelete();
 
         void deleteIt();
+
     }
 
 }

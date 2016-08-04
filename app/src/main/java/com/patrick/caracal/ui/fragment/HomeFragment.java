@@ -114,19 +114,6 @@ public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLa
             }
         });
 
-//        adapter.setOnItemClickListener(new OnItemClickListener() {
-//            @Override
-//            public void onItemClick(int position, View view, RecyclerView.ViewHolder vh) {
-//                // 因为启动的MsgFragment是MainFragment的兄弟Fragment,所以需要MainFragment.start()
-//
-//                // 这里我使用EventBus通知父MainFragment处理跳转(接耦),
-////                EventBus.getDefault().post(new StartFragmentEvent(MsgFragment.newInstance(mAdapter.getMsg(position))));
-//
-//
-//                // 也可以像使用getParentFragment()的方式,拿到父Fragment的引用来操作 (不建议)
-////              ((MainFragment) getParentFragment()).startMsgBrother(MsgFragment.newInstance());
-//            }
-//        });
     }
 
     /**
@@ -140,8 +127,10 @@ public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLa
     @Override
     public void onResume() {
         super.onResume();
-        if (presenter!=null)
+        if (presenter!=null) {
             presenter.start();
+            onRefresh();
+        }
     }
 
     @Override
@@ -157,7 +146,7 @@ public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLa
         if (event.position != MainFragment.FIRST) return;
 
         if (mInAtTop) {
-            mRefreshLayout.setRefreshing(true);
+//            mRefreshLayout.setRefreshing(true);
             onRefresh();
         } else {
             scrollToTop();
@@ -183,14 +172,24 @@ public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLa
     @Override
     public void startRefresh() {
         if (mRefreshLayout != null) {
-            mRefreshLayout.setRefreshing(true);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mRefreshLayout.setRefreshing(true);
+                }
+            });
         }
     }
 
     @Override
     public void closeRefresh() {
         if (mRefreshLayout != null) {
-            mRefreshLayout.setRefreshing(false);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mRefreshLayout.setRefreshing(false);
+                }
+            });
         }
     }
 
@@ -211,7 +210,7 @@ public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLa
                 Express exp = adapter.getData().get(position);
                 bundle.putString("expCode",exp.code);
 
-                EventBus.getDefault().post(new StartFragmentEvent(ExpressDetailsFragment.newInstance(),bundle));
+                EventBus.getDefault().post(new StartFragmentEvent(ExpressDetailsFragment.newInstance(bundle)));
             }
         });
     }

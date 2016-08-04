@@ -24,14 +24,26 @@ public class HomePresenter implements HomeContract.Presenter {
 
     @Override
     public void refreshAllExpress() {
+        view.startRefresh();
         //刷新全部快递
-        Caracal.getInstance().refresh();
+        Caracal.getInstance().refresh(new Caracal.ResultCallback() {
+            @Override
+            public void onSuccess(Object o) {
+                view.closeRefresh();
+            }
+
+            @Override
+            public void onFail(Exception e) {
+                view.closeRefresh();
+                JLog.e(e);
+            }
+        });
     }
 
 
     @Override
     public void start() {
-        this.view.startRefresh();
+//        this.view.startRefresh();
 
         Caracal.getInstance().getAllExpress(new Caracal.ResultCallback<RealmResults<Express>>() {
             @Override
@@ -52,7 +64,6 @@ public class HomePresenter implements HomeContract.Presenter {
             }
         });
 
-        Caracal.getInstance().refresh();
     }
 
     RealmChangeListener<RealmResults<Express>> listener = new RealmChangeListener<RealmResults<Express>>() {

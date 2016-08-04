@@ -7,13 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.patrick.caracal.R;
-import com.patrick.caracal.event.StartFragmentEvent;
 import com.patrick.caracal.event.TabSelectedEvent;
 import com.patrick.caracal.ui.view.BottomBar;
 import com.patrick.caracal.ui.view.BottomBarTab;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import me.yokeyword.fragmentation.SupportFragment;
 
@@ -88,7 +86,7 @@ public class MainFragment extends BaseFragment{
     }
 
     private void initView(View view) {
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
         mBottomBar = (BottomBar) view.findViewById(R.id.bottomBar);
 
         mBottomBar
@@ -125,17 +123,17 @@ public class MainFragment extends BaseFragment{
         }
     }
 
-    /**
-     * start other BrotherFragment
-     */
-    @Subscribe
-    public void startBrother(StartFragmentEvent event) {
-        start(event.targetFragment);
-    }
+//    /**
+//     * start other BrotherFragment
+//     */
+//    @Subscribe
+//    public void startBrother(StartFragmentEvent event) {
+//        start(event.targetFragment);
+//    }
 
     @Override
     public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
         super.onDestroyView();
     }
 }

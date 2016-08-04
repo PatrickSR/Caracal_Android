@@ -33,7 +33,8 @@ public class MainActivity extends SupportActivity {
     }
 
     private void initPresenter() {
-        homePresenter = new HomePresenter(mainFragment.getHomeFragment());
+        if (mainFragment != null)
+            homePresenter = new HomePresenter(mainFragment.getHomeFragment());
     }
 
     @Override
@@ -56,20 +57,20 @@ public class MainActivity extends SupportActivity {
     /**
      * 启动其他fragment
      */
-//    @Subscribe
-//    public void startBrother(StartFragmentEvent event) {
-//        start(event.targetFragment);
-//    }
+    @Subscribe
+    public void startBrother(StartFragmentEvent event) {
+        start(event.targetFragment);
+    }
 
     @Override
     protected void onResume() {
-//        EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-//        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
         super.onPause();
     }
 }

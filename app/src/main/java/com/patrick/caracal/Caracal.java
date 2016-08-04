@@ -135,15 +135,10 @@ public class Caracal {
 
     // 获取单个快递单
     public void getExpress(final String expNo, final ResultCallback<Express> resultCallback) {
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Express express = realm.where(Express.class).equalTo("code", expNo).findFirst();
+        Express express = realm.where(Express.class).equalTo("code", expNo).findFirst();
 
-                if (express == null) resultCallback.onFail(new RealmException("找不到快递单：" + expNo));
-                else resultCallback.onSuccess(express);
-            }
-        });
+        if (express == null) resultCallback.onFail(new RealmException("找不到快递单：" + expNo));
+        else resultCallback.onSuccess(express);
     }
 
     // 查询快递属于哪个公司
@@ -200,28 +195,24 @@ public class Caracal {
      * 从Realm里面获取全部单号，然后单独发送请求Get最新的状态
      * 仅仅获取 state != 3的单号，因为这些是还没完成的快递单
      */
-    public void refresh() {
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                RealmResults<Express> results = realm.where(Express.class).notEqualTo("state", 3).findAll();
-                networkRefresh(results);
-            }
-        });
+    public void refresh(ResultCallback callback) {
+        RealmResults<Express> results = realm.where(Express.class).notEqualTo("state", 3).findAll();
+        networkRefresh(results,callback);
     }
 
     /**
      * 进行网络刷新
      * @param expresses
      */
-    private void networkRefresh(RealmResults<Express> expresses) {
+    private void networkRefresh(RealmResults<Express> expresses,final ResultCallback callback) {
 
         for (final Express express :
                 expresses) {
             api.query(express.code, express.companyCode, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    JLog.e("刷新快递失败：" + express.code);
+                    JLog.e("刷新快递失败");
+                    callback.onFail(e);
                 }
 
                 @Override
@@ -229,6 +220,7 @@ public class Caracal {
                     if (response.code() == 200) {
                         final String resp = response.body().string();
                         JLog.d("刷新快递 <---- "+resp);
+                        callback.onSuccess(null);
 
                         if (resp.equals("null")|| TextUtils.isEmpty(resp)) return;
 
