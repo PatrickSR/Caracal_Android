@@ -9,58 +9,56 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/exp_code"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="1234567890"
-            android:textSize="26sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/exp_company_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:lines="1"
-            android:text="天天快递" />
-
-        <TextView
-            android:id="@+id/acceptStation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="快件由无锡集散陆运发往广州分拨中心,快件由无锡集散陆运发往广州分拨中心" />
-
-        <FrameLayout
-            android:layout_marginTop="10dp"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="24dp">
             <TextView
+                android:id="@+id/exp_name"
+                android:textColor="@android:color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:text="这是一个快递"
+                android:textSize="16sp" />
+
+            <!--<TextView-->
+                <!--android:text="最新"-->
+                <!--android:textSize="16sp"-->
+                <!--android:textColor="#e21f1c"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="2dp"
+            android:layout_height="20dp">
+
+            <TextView
+                android:id="@+id/acceptStation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="快件由无锡集散陆运发往广州分拨中心,快件由无锡集散陆运发往广州分拨中心" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="2dp"
+            android:layout_height="20dp">
+            <TextView
                 android:id="@+id/acceptTime"
-                android:gravity="start|center"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:lines="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="2016-08-01 23:38:28" />
 
-            <ImageView
-                android:id="@+id/company_type"
-                android:src="@drawable/ic_domestic"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="right"
-                android:gravity="center|start"/>
-            <!--<TextView-->
-                <!--android:id="@+id/company_type"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:drawableLeft="@drawable/ic_domestic"-->
-                <!--android:layout_gravity="right"-->
-                <!--android:gravity="center|start"-->
-                <!--android:text=" 国内"-->
-                <!--android:textColor="@color/color_domestic" />-->
-        </FrameLayout>
+        </RelativeLayout>
+
+
 
     </LinearLayout>
 
