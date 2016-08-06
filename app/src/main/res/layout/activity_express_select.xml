@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:gravity="center"
             android:id="@+id/tvComeback"
             android:text="返回"
@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:gravity="center"
             android:textSize="20sp"
             android:text="快递公司查询"

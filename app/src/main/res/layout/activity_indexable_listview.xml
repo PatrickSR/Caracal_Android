@@ -14,15 +14,15 @@
         android:background="?attr/colorPrimary"
         app:title="选择快递公司"
         app:titleTextColor="@android:color/white"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
+        app:theme="@style/AppTheme.AppBarOverlay"/>
 
     <me.yokeyword.indexablelistview.IndexableStickyListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:indexBar_selected_textColor="@color/colorAccent"
+        app:indexBar_selected_textColor="@color/colorPrimary"
         app:indexBar_textColor="@android:color/darker_gray"
         app:indexBar_textSize="12sp"
-        app:indexListView_rightOverlayColor="@color/colorAccent"
+        app:indexListView_rightOverlayColor="@color/colorPrimary"
         app:indexListView_type_overlay="right" />
 </LinearLayout>

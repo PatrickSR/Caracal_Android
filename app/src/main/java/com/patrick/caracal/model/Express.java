@@ -25,6 +25,8 @@ public class Express extends RealmObject{
 
     public int state; //当前状态 2-在途中，3-签收,4-问题件
 
+    public String remark;   //备注
+
     public RealmList<Trace> traces;
 
     public String lastAcceptTime;   //最新接应时间
