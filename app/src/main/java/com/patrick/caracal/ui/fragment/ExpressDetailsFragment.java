@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,6 +15,7 @@ import com.patrick.caracal.adapter.TimeLineAdapter;
 import com.patrick.caracal.contract.ExpressDetailsContract;
 import com.patrick.caracal.model.Trace;
 import com.patrick.caracal.presenter.ExpressDetailsPresenter;
+import com.rey.material.app.Dialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,17 +77,49 @@ public class ExpressDetailsFragment extends BaseBackFragment implements ExpressD
      */
     private void initMenu() {
         toolbar.inflateMenu(R.menu.menu_details_fragment);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.action_del:
+                        presenter.attemptDelete();
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     @Override
     public void showDelDialog() {
-
+        final Dialog delDialog = new Dialog(getContext());
+        delDialog.title("Dialog title")
+                .positiveAction("OK")
+                .negativeAction("CANCEL")
+                .positiveActionTextColor(getResources().getColor(android.R.color.black))
+                .negativeActionTextColor(getResources().getColor(android.R.color.black))
+                .positiveActionClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        presenter.deleteIt();
+                        delDialog.dismiss();
+                        _mActivity.onBackPressed();
+                    }
+                })
+                .negativeActionClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        delDialog.dismiss();
+                    }
+                })
+                .cancelable(true)
+                .show();
     }
 
-    @Override
-    public void hideDelDialog() {
-
-    }
+//    @Override
+//    public void hideDelDialog() {
+//
+//    }
 
     @Override
     public void setupDetails(RealmList<Trace> traces) {

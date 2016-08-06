@@ -19,7 +19,7 @@ public interface ExpressDetailsContract {
         void showDelDialog();
 
         //隐藏删除提示dialog
-        void hideDelDialog();
+//        void hideDelDialog();
 
         void setupDetails(RealmList<Trace> traces);
 

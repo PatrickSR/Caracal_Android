@@ -4,6 +4,8 @@ import com.patrick.caracal.Caracal;
 import com.patrick.caracal.contract.ExpressDetailsContract;
 import com.patrick.caracal.model.Express;
 
+import io.realm.Realm;
+
 /**
  * Created by 15920 on 2016/8/4.
  */
@@ -22,12 +24,16 @@ public class ExpressDetailsPresenter implements ExpressDetailsContract.Presenter
 
     @Override
     public void attemptDelete() {
-
+        view.showDelDialog();
     }
 
     @Override
     public void deleteIt() {
-
+        Realm realm = Realm.getDefaultInstance();
+        final Express express = realm.where(Express.class).equalTo("code",expCode).findFirst();
+        realm.beginTransaction();
+        express.deleteFromRealm();
+        realm.commitTransaction();
     }
 
     @Override
