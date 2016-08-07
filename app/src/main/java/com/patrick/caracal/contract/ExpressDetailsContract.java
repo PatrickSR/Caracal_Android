@@ -21,7 +21,7 @@ public interface ExpressDetailsContract {
         //隐藏删除提示dialog
 //        void hideDelDialog();
 
-        void setupDetails(RealmList<Trace> traces);
+        void setupDetails(RealmList<Trace> traces,String expName,String companyName);
 
     }
 

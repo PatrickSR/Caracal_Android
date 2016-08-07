@@ -134,6 +134,14 @@ public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLa
     }
 
     @Override
+    public void onPause() {
+        if (presenter != null){
+            presenter.stop();
+        }
+        super.onPause();
+    }
+
+    @Override
     protected void onFragmentResult(int requestCode, int resultCode, Bundle data) {
 
     }

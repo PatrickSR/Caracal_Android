@@ -1,5 +1,7 @@
 package com.patrick.caracal.presenter;
 
+import android.text.TextUtils;
+
 import com.patrick.caracal.Caracal;
 import com.patrick.caracal.contract.ExpressDetailsContract;
 import com.patrick.caracal.model.Express;
@@ -16,6 +18,7 @@ public class ExpressDetailsPresenter implements ExpressDetailsContract.Presenter
     private String expCode;
 
     private Realm realm;
+
 
     public ExpressDetailsPresenter(ExpressDetailsContract.View view,String expCode) {
         view.setPresenter(this);
@@ -42,7 +45,12 @@ public class ExpressDetailsPresenter implements ExpressDetailsContract.Presenter
             @Override
             public void onSuccess(Express express) {
                 //加载adapter
-                view.setupDetails(express.traces);
+                if (TextUtils.isEmpty(express.remark)){
+                    String name = express.companyName+" "+express.code;
+                    view.setupDetails(express.traces,name,express.companyName);
+                }else{
+                    view.setupDetails(express.traces,express.remark,express.companyName);
+                }
             }
 
             @Override

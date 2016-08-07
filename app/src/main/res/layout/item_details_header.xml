@@ -15,6 +15,7 @@
         android:padding="10dp">
 
         <TextView
+            android:id="@+id/exp_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -24,6 +25,7 @@
             android:textSize="24sp" />
 
         <TextView
+            android:id="@+id/exp_company"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"

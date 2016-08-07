@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.patrick.caracal.R;
 import com.patrick.caracal.adapter.TimeLineAdapter;
@@ -122,13 +123,18 @@ public class ExpressDetailsFragment extends BaseBackFragment implements ExpressD
 //    }
 
     @Override
-    public void setupDetails(RealmList<Trace> traces) {
-        TimeLineAdapter adapter = new TimeLineAdapter(getContext(),traces,genHeaderView());
+    public void setupDetails(RealmList<Trace> traces,String name,String companyName) {
+        TimeLineAdapter adapter = new TimeLineAdapter(getContext(),traces,genHeaderView(name,companyName));
         view_timeline.setAdapter(adapter);
     }
 
-    private View genHeaderView(){
-        return LayoutInflater.from(getContext()).inflate(R.layout.item_details_header,view_timeline,false);
+    private View genHeaderView(String name,String companyName){
+        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.item_details_header,view_timeline,false);
+
+        ((TextView)headerView.findViewById(R.id.exp_name)).setText(name);
+        ((TextView)headerView.findViewById(R.id.exp_company)).setText(companyName);
+
+        return headerView;
     }
 
     @Override
