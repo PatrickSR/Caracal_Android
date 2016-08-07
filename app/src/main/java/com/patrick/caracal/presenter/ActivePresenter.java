@@ -12,15 +12,15 @@ import io.realm.RealmResults;
 /**
  * Created by 15920 on 2016/7/31.
  */
-public class HomePresenter implements HomeContract.Presenter {
+public class ActivePresenter implements HomeContract.ActiveContract.Presenter {
 
-    private HomeContract.View view;
+    private HomeContract.ActiveContract.View view;
 
     private RealmResults<Express> allExpress;
 
     private Realm realm;
 
-    public HomePresenter(HomeContract.View view){
+    public ActivePresenter(HomeContract.ActiveContract.View view){
         view.setPresenter(this);
         this.view = view;
     }
@@ -54,19 +54,19 @@ public class HomePresenter implements HomeContract.Presenter {
         Caracal.getInstance().getAllExpress(realm,new Caracal.ResultCallback<RealmResults<Express>>() {
             @Override
             public void onSuccess(RealmResults<Express> results) {
-                HomePresenter.this.view.closeRefresh();
+                ActivePresenter.this.view.closeRefresh();
 
-                HomePresenter.this.allExpress = results;
+                ActivePresenter.this.allExpress = results;
 
                 //添加数据监听
-                HomePresenter.this.allExpress.addChangeListener(listener);
-                view.showAllExpresss(HomePresenter.this.allExpress);
+                ActivePresenter.this.allExpress.addChangeListener(listener);
+                view.showAllExpresss(ActivePresenter.this.allExpress);
             }
 
             @Override
             public void onFail(Exception e) {
                 JLog.e(e);
-                HomePresenter.this.view.closeRefresh();
+                ActivePresenter.this.view.closeRefresh();
             }
         });
 
@@ -74,7 +74,7 @@ public class HomePresenter implements HomeContract.Presenter {
 
     @Override
     public void stop() {
-        HomePresenter.this.allExpress.removeChangeListener(listener);
+        ActivePresenter.this.allExpress.removeChangeListener(listener);
         realm.close();
     }
 

@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.patrick.caracal.R;
 import com.patrick.caracal.event.StartFragmentEvent;
-import com.patrick.caracal.presenter.HomePresenter;
+import com.patrick.caracal.presenter.ActivePresenter;
 import com.patrick.caracal.ui.fragment.MainFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -15,8 +15,6 @@ import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 public class MainActivity extends SupportActivity {
-
-    private HomePresenter homePresenter;
 
     private MainFragment mainFragment;
 
@@ -32,10 +30,6 @@ public class MainActivity extends SupportActivity {
         }
     }
 
-    private void initPresenter() {
-        if (mainFragment != null)
-            homePresenter = new HomePresenter(mainFragment.getHomeFragment());
-    }
 
     @Override
     public void onBackPressedSupport() {
@@ -51,7 +45,6 @@ public class MainActivity extends SupportActivity {
     protected void onStart() {
         super.onStart();
 
-        initPresenter();
     }
 
     /**

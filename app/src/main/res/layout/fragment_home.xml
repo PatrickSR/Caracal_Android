@@ -1,56 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar"/>
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:title="首页"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay"
+            app:titleTextAppearance="@style/Toolbar_TextAppearance_White" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            app:tabIndicatorColor="@android:color/white"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextAppearance="@style/tab_appearance"
+            app:tabTextColor="#cccccc" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/multiple_actions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            app:fab_addButtonColorPressed="@android:color/white"
+            app:fab_labelStyle="@style/menu_labels_style">
 
-            <com.getbase.floatingactionbutton.FloatingActionsMenu
-                android:id="@+id/multiple_actions"
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/add_express"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
-                app:fab_addButtonColorPressed="@android:color/white"
-                app:fab_labelStyle="@style/menu_labels_style">
+                app:fab_colorNormal="@android:color/white"
+                app:fab_colorPressed="@android:color/white"
+                app:fab_icon="@drawable/ic_pen_24dp"
+                app:fab_title="@string/add_express" />
 
 
-                <com.getbase.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/add_express"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:fab_colorNormal="@android:color/white"
-                    app:fab_colorPressed="@android:color/white"
-                    app:fab_icon="@drawable/ic_pen_24dp"
-                    app:fab_title="@string/add_express"
-                    tools:layout_editor_absoluteX="161dp"
-                    tools:layout_editor_absoluteY="45dp" />
-
-
-            </com.getbase.floatingactionbutton.FloatingActionsMenu>
-        </RelativeLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+    </RelativeLayout>
 </LinearLayout>

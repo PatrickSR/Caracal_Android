@@ -11,31 +11,42 @@ import io.realm.RealmResults;
  */
 public interface HomeContract {
 
-    interface View extends BaseView<Presenter>{
+    interface ActiveContract{
+        interface View extends BaseView<Presenter>{
 
-        /**
-         * 开始刷新
-         */
-        void startRefresh();
-        /**
-         * 关闭刷新
-         */
-        void closeRefresh();
+            /**
+             * 开始刷新
+             */
+            void startRefresh();
+            /**
+             * 关闭刷新
+             */
+            void closeRefresh();
 
-        /**
-         * 显示快递单
-         * @param results
-         */
-        void showAllExpresss(RealmResults<Express> results);
+            /**
+             * 显示快递单
+             * @param results
+             */
+            void showAllExpresss(RealmResults<Express> results);
+        }
+
+        interface Presenter extends BasePresenter{
+
+            /**
+             * 更新快递单状态
+             */
+            void refreshAllExpress();
+
+
+        }
     }
 
-    interface Presenter extends BasePresenter{
+    interface FileContract{
+        interface View extends BaseView<Presenter>{
 
-        /**
-         * 更新快递单状态
-         */
-        void refreshAllExpress();
+        }
+        interface Presenter extends BasePresenter{
 
-
+        }
     }
 }
