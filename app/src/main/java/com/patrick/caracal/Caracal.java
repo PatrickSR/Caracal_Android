@@ -62,7 +62,11 @@ public class Caracal {
     /**
      * 添加/订阅 快递
      */
-    public void subExpress(final String expNo, final String companyCode,final String companyName, final ResultCallback<String> resultCallback) {
+    public void subExpress(final String expNo,
+                           final String companyCode,
+                           final String companyName,
+                           final String remark,
+                           final ResultCallback<String> resultCallback) {
         api.subscribe(expNo, companyCode, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -84,6 +88,7 @@ public class Caracal {
                         express.code =expNo;
                         express.companyCode = companyCode;
                         express.companyName = companyName;
+                        express.remark = remark;
 
                         realm.copyToRealmOrUpdate(express);
 
@@ -226,6 +231,7 @@ public class Caracal {
 
                             Realm realm = Realm.getDefaultInstance();
                             realm.beginTransaction();
+
                             realm.createOrUpdateObjectFromJson(Express.class,resp);
                             realm.commitTransaction();
                             realm.close();

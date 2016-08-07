@@ -18,8 +18,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,24 +53,42 @@
                 android:src="@drawable/ic_barcode" />
         </LinearLayout>
 
+        <com.rey.material.widget.EditText
+            android:id="@+id/input_exp_remark"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="4"
+            android:hint="备注"
+            android:inputType="text"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            app:et_dividerColor="@color/divider"
+            app:et_dividerHeight="1dp"
+            app:et_helper="备注"
+            app:et_labelEnable="true"
+            app:et_labelTextColor="@color/colorPrimary"
+            app:et_supportMode="none"
+            app:et_supportSingleLine="true"
+            app:et_supportTextColor="@color/colorPrimary" />
+
         <TextView
             android:id="@+id/choose_exp_company"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:gravity="center|left"
             android:layout_gravity="bottom"
             android:layout_marginLeft="6dp"
             android:drawableLeft="@drawable/ic_express_gray"
+            android:gravity="center|left"
             android:padding="6dp"
             android:text="  请选择快递公司" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:gravity="center|left"
             android:layout_gravity="bottom"
             android:layout_marginLeft="6dp"
             android:drawableLeft="@drawable/ic_tips_24dp"
+            android:gravity="center|left"
             android:padding="6dp"
             android:text="  提示：若未选择快递公司，会尝试自动匹配" />
     </LinearLayout>

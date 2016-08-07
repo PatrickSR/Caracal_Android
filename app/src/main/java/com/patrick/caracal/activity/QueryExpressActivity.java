@@ -1,16 +1,9 @@
 package com.patrick.caracal.activity;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,10 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,10 +22,7 @@ import com.orhanobut.dialogplus.OnItemClickListener;
 import com.patrick.caracal.Caracal;
 import com.patrick.caracal.R;
 import com.patrick.caracal.model.Company;
-import com.rey.material.app.BottomSheetDialog;
-import com.rey.material.widget.Button;
 import com.rey.material.widget.EditText;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +32,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.realm.Realm;
 
 /**
  * Created by junz on 2016/6/18.
@@ -64,6 +50,12 @@ public class QueryExpressActivity extends BaseActivity {
      */
     @BindView(R.id.input_exp_code)
     EditText inputExpCode;
+
+    /**
+     * 输入备注
+     */
+    @BindView(R.id.input_exp_remark)
+    EditText inputExpRemark;
 
     @OnClick(R.id.scan_exp_code)
     void scanExpBarcode() {
@@ -152,7 +144,6 @@ public class QueryExpressActivity extends BaseActivity {
     private void addExpress() {
         //检查快递单号和快递公司
         String expCode = inputExpCode.getText().toString();
-
         if (TextUtils.isEmpty(expCode)) {
             showToast("请输入快递单号");
             return;
@@ -163,7 +154,8 @@ public class QueryExpressActivity extends BaseActivity {
             queryExpressFrom(expCode);
         } else {
             //订阅快递
-            subExpress(expCode, this.companyCode,this.companyName);
+            String expRemark = inputExpRemark.getText().toString();
+            subExpress(expCode, this.companyCode,this.companyName,expRemark);
         }
     }
 
@@ -231,7 +223,8 @@ public class QueryExpressActivity extends BaseActivity {
                             JLog.d("code:" + company.code);
                             JLog.d("name:" + company.name);
 
-                            subExpress(expCode,company.code, company.name);
+                            String expRemark = inputExpRemark.getText().toString();
+                            subExpress(expCode,company.code, company.name,expRemark);
 
                             dialog.dismiss();
                         }
@@ -253,9 +246,9 @@ public class QueryExpressActivity extends BaseActivity {
      * @param expCode
      * @param companyCode
      */
-    private void subExpress(String expCode, String companyCode, String companyName) {
+    private void subExpress(String expCode, String companyCode, String companyName,String remark) {
 
-        Caracal.getInstance().subExpress(expCode, companyCode,companyName, new Caracal.ResultCallback<String>() {
+        Caracal.getInstance().subExpress(expCode, companyCode,companyName, remark,new Caracal.ResultCallback<String>() {
             @Override
             public void onSuccess(String s) {
 

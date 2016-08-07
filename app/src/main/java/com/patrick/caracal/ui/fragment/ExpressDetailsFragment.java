@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -123,15 +124,30 @@ public class ExpressDetailsFragment extends BaseBackFragment implements ExpressD
 //    }
 
     @Override
-    public void setupDetails(RealmList<Trace> traces,String name,String companyName) {
-        TimeLineAdapter adapter = new TimeLineAdapter(getContext(),traces,genHeaderView(name,companyName));
+    public void setupDetails(RealmList<Trace> traces,String code,String companyName,String remark) {
+        TimeLineAdapter adapter = new TimeLineAdapter(getContext(),traces,genHeaderView(code,companyName,remark));
         view_timeline.setAdapter(adapter);
     }
 
-    private View genHeaderView(String name,String companyName){
+    /**
+     * 组装Header
+     * @param code 单号
+     * @param companyName 快递公司名
+     * @param remark 备注，如果没有备注，就用快递公司名字 + 单号作为显示到exp_name上
+     * @return
+     */
+    private View genHeaderView(String code,String companyName,String remark){
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.item_details_header,view_timeline,false);
 
-        ((TextView)headerView.findViewById(R.id.exp_name)).setText(name);
+        if (TextUtils.isEmpty(remark)){
+            String name = companyName + " "+ code;
+            ((TextView)headerView.findViewById(R.id.exp_name)).setText(name);
+        }else{
+            ((TextView)headerView.findViewById(R.id.exp_name)).setText(remark);
+            TextView exp_code = (TextView)headerView.findViewById(R.id.exp_code);
+            exp_code.setVisibility(View.VISIBLE);
+            exp_code.setText(code);
+        }
         ((TextView)headerView.findViewById(R.id.exp_company)).setText(companyName);
 
         return headerView;

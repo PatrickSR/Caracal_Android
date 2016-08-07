@@ -45,12 +45,11 @@ public class ExpressDetailsPresenter implements ExpressDetailsContract.Presenter
             @Override
             public void onSuccess(Express express) {
                 //加载adapter
-                if (TextUtils.isEmpty(express.remark)){
-                    String name = express.companyName+" "+express.code;
-                    view.setupDetails(express.traces,name,express.companyName);
-                }else{
-                    view.setupDetails(express.traces,express.remark,express.companyName);
-                }
+                view.setupDetails(
+                        express.traces,
+                        express.code,
+                        express.companyName,
+                        express.remark);
             }
 
             @Override
