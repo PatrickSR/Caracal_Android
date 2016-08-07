@@ -15,6 +15,8 @@ public class ExpressDetailsPresenter implements ExpressDetailsContract.Presenter
 
     private String expCode;
 
+    private Realm realm;
+
     public ExpressDetailsPresenter(ExpressDetailsContract.View view,String expCode) {
         view.setPresenter(this);
         this.view = view;
@@ -29,17 +31,14 @@ public class ExpressDetailsPresenter implements ExpressDetailsContract.Presenter
 
     @Override
     public void deleteIt() {
-        Realm realm = Realm.getDefaultInstance();
-        final Express express = realm.where(Express.class).equalTo("code",expCode).findFirst();
-        realm.beginTransaction();
-        express.deleteFromRealm();
-        realm.commitTransaction();
+        Caracal.getInstance().delExpress(expCode);
     }
 
     @Override
     public void start() {
+        realm = Realm.getDefaultInstance();
         //找到对应的快递单
-        Caracal.getInstance().getExpress(expCode, new Caracal.ResultCallback<Express>() {
+        Caracal.getInstance().getExpress(realm,expCode, new Caracal.ResultCallback<Express>() {
             @Override
             public void onSuccess(Express express) {
                 //加载adapter
@@ -51,5 +50,10 @@ public class ExpressDetailsPresenter implements ExpressDetailsContract.Presenter
 
             }
         });
+    }
+
+    @Override
+    public void stop() {
+        realm.close();
     }
 }

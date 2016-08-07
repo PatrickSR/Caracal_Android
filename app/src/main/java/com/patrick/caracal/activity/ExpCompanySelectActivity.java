@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.realm.Realm;
 import io.realm.RealmResults;
 import me.yokeyword.indexablelistview.IndexEntity;
 import me.yokeyword.indexablelistview.IndexHeaderEntity;
@@ -38,10 +39,12 @@ public class ExpCompanySelectActivity extends BaseActivity {
     //热门的快递列表(Adapter显示用的)
     private List<ExpCompanyShowEntity> hotCompanyList = new ArrayList<>();
 
+    private Realm realm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        realm = Realm.getDefaultInstance();
         initView();
 
         initData();
@@ -56,13 +59,13 @@ public class ExpCompanySelectActivity extends BaseActivity {
     }
 
     private void initData() {
-        RealmResults<Company> hotCompany = Caracal.getInstance().getHotCompany();
+        RealmResults<Company> hotCompany = Caracal.getInstance().getHotCompany(realm);
         for (Company c :
                 hotCompany) {
             hotCompanyList.add(new ExpCompanyShowEntity(c.name,c.code));
         }
 
-        RealmResults<Company> allCompany = Caracal.getInstance().getAllCompany();
+        RealmResults<Company> allCompany = Caracal.getInstance().getAllCompany(realm);
         for (Company c :
                 allCompany) {
             expCompanyList.add(new ExpCompanyShowEntity(c.name,c.code));
@@ -120,4 +123,10 @@ public class ExpCompanySelectActivity extends BaseActivity {
             ExpCompanySelectActivity.this.finish();
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        realm.close();
+        super.onDestroy();
+    }
 }

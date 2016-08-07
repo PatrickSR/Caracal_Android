@@ -138,6 +138,13 @@ public class ExpressDetailsFragment extends BaseBackFragment implements ExpressD
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if (this.presenter != null) this.presenter.stop();
+
+    }
+
+    @Override
     public void setPresenter(ExpressDetailsContract.Presenter presenter) {
         this.presenter = presenter;
     }

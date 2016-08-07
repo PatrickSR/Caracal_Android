@@ -5,6 +5,11 @@ package com.patrick.caracal;
  */
 public interface BasePresenter {
 
+    /**
+     * start 在fragment 的onRes
+     */
     void start();
+
+    void stop();
 
 }

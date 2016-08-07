@@ -183,7 +183,7 @@ public class HomeFragment extends BaseLazyMainFragment implements SwipeRefreshLa
 
     @Override
     public void closeRefresh() {
-        if (mRefreshLayout != null) {
+        if (mRefreshLayout != null && getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

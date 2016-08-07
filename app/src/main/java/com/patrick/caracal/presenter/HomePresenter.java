@@ -5,6 +5,7 @@ import com.patrick.caracal.Caracal;
 import com.patrick.caracal.contract.HomeContract;
 import com.patrick.caracal.model.Express;
 
+import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
@@ -17,6 +18,8 @@ public class HomePresenter implements HomeContract.Presenter {
 
     private RealmResults<Express> allExpress;
 
+    private Realm realm;
+
     public HomePresenter(HomeContract.View view){
         view.setPresenter(this);
         this.view = view;
@@ -25,8 +28,11 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void refreshAllExpress() {
         view.startRefresh();
+
+        RealmResults<Express> results = realm.where(Express.class).notEqualTo("state", 3).findAll();
+
         //刷新全部快递
-        Caracal.getInstance().refresh(new Caracal.ResultCallback() {
+        Caracal.getInstance().refresh(results,new Caracal.ResultCallback() {
             @Override
             public void onSuccess(Object o) {
                 view.closeRefresh();
@@ -44,8 +50,8 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void start() {
 //        this.view.startRefresh();
-
-        Caracal.getInstance().getAllExpress(new Caracal.ResultCallback<RealmResults<Express>>() {
+        realm = Realm.getDefaultInstance();
+        Caracal.getInstance().getAllExpress(realm,new Caracal.ResultCallback<RealmResults<Express>>() {
             @Override
             public void onSuccess(RealmResults<Express> results) {
                 HomePresenter.this.view.closeRefresh();
@@ -66,7 +72,13 @@ public class HomePresenter implements HomeContract.Presenter {
 
     }
 
-    RealmChangeListener<RealmResults<Express>> listener = new RealmChangeListener<RealmResults<Express>>() {
+    @Override
+    public void stop() {
+        HomePresenter.this.allExpress.removeChangeListener(listener);
+        realm.close();
+    }
+
+    final RealmChangeListener<RealmResults<Express>> listener = new RealmChangeListener<RealmResults<Express>>() {
         @Override
         public void onChange(RealmResults<Express> element) {
             //如果数据发生变化

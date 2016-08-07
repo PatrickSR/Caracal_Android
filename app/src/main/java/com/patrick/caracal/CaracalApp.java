@@ -21,7 +21,6 @@ public class CaracalApp extends Application {
 
 //        initRealmDB();
         Caracal.init(this);
-
         Caracal.getInstance().importCompanyFromRAW();
     }
 
@@ -33,18 +32,5 @@ public class CaracalApp extends Application {
                 .setDebug(true)
                 .writeToFile(false);
     }
-
-    /**
-     * 初始化RealmDB
-     */
-    private void initRealmDB() {
-        RealmConfiguration config = new RealmConfiguration.Builder(this)
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        Realm.setDefaultConfiguration(config);
-    }
-
-
-
 
 }
