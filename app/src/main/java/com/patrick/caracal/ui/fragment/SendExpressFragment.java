@@ -2,17 +2,19 @@ package com.patrick.caracal.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.patrick.caracal.R;
+import com.patrick.caracal.event.StartFragmentEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import me.yokeyword.fragmentation.SupportFragment;
 
 /**
@@ -22,7 +24,13 @@ import me.yokeyword.fragmentation.SupportFragment;
  */
 public class SendExpressFragment extends SupportFragment {
 
-    private Toolbar mToolbar;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+
+    @OnClick(R.id.online)void onLine(){
+        //跳转到在线寄快递界面
+        EventBus.getDefault().post(new StartFragmentEvent(OnlineOrderExpressFragment.newInstance()));
+    }
 
     public static SendExpressFragment newInstance() {
 
@@ -38,6 +46,8 @@ public class SendExpressFragment extends SupportFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_send_express, container, false);
         initView(view);
+        ButterKnife.bind(this,view);
+
         return view;
     }
 

@@ -9,7 +9,8 @@
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorPrimaryLight">#BBDEFB</color>
-    <color name="colorAccent">#FF5722</color>
+    <!--<color name="colorAccent">#FF5722</color>-->
+    <color name="colorAccent">#90CAF9</color>
 
     <!--国内快递颜色-->
     <color name="color_domestic">#00796B</color>
