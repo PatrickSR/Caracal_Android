@@ -29,8 +29,6 @@ public class MainFragment extends BaseFragment{
 
     private BottomBar mBottomBar;
 
-
-
     public static MainFragment newInstance() {
 
         Bundle args = new Bundle();

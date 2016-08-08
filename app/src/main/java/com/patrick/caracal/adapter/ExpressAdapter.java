@@ -58,7 +58,7 @@ public class ExpressAdapter extends RealmRecyclerViewAdapter<Express, ExpressAda
         this.mClickListener = listener;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.exp_name)
         public TextView exp_name;   //单号

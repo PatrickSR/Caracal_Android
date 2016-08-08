@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +24,8 @@ import io.realm.RealmList;
 
 /**
  * Created by 15920 on 2016/7/31.
- *
  */
-public class ExpressDetailsFragment extends BaseBackFragment implements ExpressDetailsContract.View{
+public class ExpressDetailsFragment extends BaseBackFragment implements ExpressDetailsContract.View {
 
     private ExpressDetailsContract.Presenter presenter;
 
@@ -49,14 +47,14 @@ public class ExpressDetailsFragment extends BaseBackFragment implements ExpressD
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String expCode = getArguments().getString("expCode");
-        new ExpressDetailsPresenter(this,expCode);
+        new ExpressDetailsPresenter(this, expCode);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_express_details, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         view_timeline.setLayoutManager(new LinearLayoutManager(getContext()));
         view_timeline.setHasFixedSize(true);
 
@@ -68,7 +66,7 @@ public class ExpressDetailsFragment extends BaseBackFragment implements ExpressD
     /**
      * 初始化toolbar
      */
-    private void initToolbar(){
+    private void initToolbar() {
         initToolbarNav(toolbar);
         toolbar.setTitle("查看详情");
     }
@@ -87,9 +85,9 @@ public class ExpressDetailsFragment extends BaseBackFragment implements ExpressD
     @Override
     public void showDelDialog() {
         final Dialog delDialog = new Dialog(getContext());
-        delDialog.title("Dialog title")
-                .positiveAction("OK")
-                .negativeAction("CANCEL")
+        delDialog.title("是否删除快递单记录?")
+                .positiveAction("确定")
+                .negativeAction("取消")
                 .positiveActionTextColor(getResources().getColor(android.R.color.black))
                 .negativeActionTextColor(getResources().getColor(android.R.color.black))
                 .positiveActionClickListener(new View.OnClickListener() {
@@ -111,33 +109,32 @@ public class ExpressDetailsFragment extends BaseBackFragment implements ExpressD
     }
 
     @Override
-    public void setupDetails(RealmList<Trace> traces,String code,String companyName,String remark) {
-        TimeLineAdapter adapter = new TimeLineAdapter(getContext(),traces,genHeaderView(code,companyName,remark));
+    public void setupDetails(RealmList<Trace> traces, String code, String companyName, String remark) {
+        TimeLineAdapter adapter = new TimeLineAdapter(getContext(), traces, genHeaderView(code, companyName, remark));
         view_timeline.setAdapter(adapter);
     }
 
 
-
     /**
      * 组装Header
-     * @param code 单号
+     *
+     * @param code        单号
      * @param companyName 快递公司名
-     * @param remark 备注，如果没有备注，就用快递公司名字 + 单号作为显示到exp_name上
+     * @param remark      备注，如果没有备注，就用快递公司名字 + 单号作为显示到exp_name上
      * @return
      */
-    private View genHeaderView(String code,String companyName,String remark){
-        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.item_details_header,view_timeline,false);
+    private View genHeaderView(String code, String companyName, String remark) {
+        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.item_details_header, view_timeline, false);
 
-        if (TextUtils.isEmpty(remark)){
-            String name = companyName + " "+ code;
-            ((TextView)headerView.findViewById(R.id.exp_name)).setText(name);
-        }else{
-            ((TextView)headerView.findViewById(R.id.exp_name)).setText(remark);
-            TextView exp_code = (TextView)headerView.findViewById(R.id.exp_code);
-            exp_code.setVisibility(View.VISIBLE);
-            exp_code.setText(code);
-        }
-        ((TextView)headerView.findViewById(R.id.exp_company)).setText(companyName);
+//        if (TextUtils.isEmpty(remark)){
+//            String name = companyName + " "+ code;
+//            ((TextView)headerView.findViewById(R.id.exp_name)).setText(name);
+//        }else{
+        ((TextView) headerView.findViewById(R.id.exp_name)).setText(remark);
+//            exp_code.setVisibility(View.VISIBLE);
+        ((TextView) headerView.findViewById(R.id.exp_code)).setText(code);
+//        }
+        ((TextView) headerView.findViewById(R.id.exp_company)).setText(companyName);
 
         return headerView;
     }

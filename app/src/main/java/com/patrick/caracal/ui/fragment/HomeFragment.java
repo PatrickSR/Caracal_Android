@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,6 +15,9 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.patrick.caracal.R;
 import com.patrick.caracal.activity.QueryExpressActivity;
 import com.patrick.caracal.adapter.HomePagerFragmentAdapter;
+import com.patrick.caracal.event.StartFragmentEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,9 +64,32 @@ public class HomeFragment extends BaseLazyMainFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home,container,false);
         ButterKnife.bind(this,view);
+        setupToolbar();
         mTab.addTab(mTab.newTab().setText("活跃"));
         mTab.addTab(mTab.newTab().setText("归档"));
         return view;
+    }
+
+    private void setupToolbar(){
+        toolbar.inflateMenu(R.menu.menu_home_fragment);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.action_search:
+                        EventBus.getDefault().post(new StartFragmentEvent(SearchExpressFragment.newInstance()));
+                        break;
+
+                    case R.id.action_about:
+                        break;
+
+                    case R.id.action_update:
+                        break;
+                }
+
+                return true;
+            }
+        });
     }
 
     @Override

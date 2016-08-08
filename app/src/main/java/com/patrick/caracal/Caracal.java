@@ -88,8 +88,12 @@ public class Caracal {
                         express.code =expNo;
                         express.companyCode = companyCode;
                         express.companyName = companyName;
-                        express.remark = remark;
 
+                        if (TextUtils.isEmpty(remark)){
+                            express.remark = companyName + " " +expNo;
+                        }else{
+                            express.remark = remark;
+                        }
                         realm.copyToRealmOrUpdate(express);
 
                         realm.close();
