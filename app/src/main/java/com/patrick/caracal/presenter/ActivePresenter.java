@@ -51,7 +51,7 @@ public class ActivePresenter implements HomeContract.ActiveContract.Presenter {
     public void start() {
 //        this.view.startRefresh();
         realm = Realm.getDefaultInstance();
-        Caracal.getInstance().getAllExpress(realm,new Caracal.ResultCallback<RealmResults<Express>>() {
+        Caracal.getInstance().getAllActiveExpress(realm,new Caracal.ResultCallback<RealmResults<Express>>() {
             @Override
             public void onSuccess(RealmResults<Express> results) {
                 ActivePresenter.this.view.closeRefresh();

@@ -43,7 +43,11 @@ public interface HomeContract {
 
     interface FileContract{
         interface View extends BaseView<Presenter>{
-
+            /**
+             * 显示归档的快递
+             * @param results
+             */
+            void showFileExpress(RealmResults<Express> results);
         }
         interface Presenter extends BasePresenter{
 

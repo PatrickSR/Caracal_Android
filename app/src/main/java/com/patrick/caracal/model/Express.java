@@ -25,6 +25,8 @@ public class Express extends RealmObject{
 
     public int state; //当前状态 2-在途中，3-签收,4-问题件
 
+    public boolean isActive = true;
+
     public String remark;   //备注
 
     public RealmList<Trace> traces;

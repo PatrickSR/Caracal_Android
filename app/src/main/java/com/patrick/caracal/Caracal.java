@@ -130,6 +130,24 @@ public class Caracal {
         callback.onSuccess(realm.where(Express.class).findAll());
     }
 
+    /**
+     * 获取活跃的快递单
+     * @param realm
+     * @param callback
+     */
+    public void getAllActiveExpress(Realm realm,final ResultCallback<RealmResults<Express>> callback ){
+        callback.onSuccess(realm.where(Express.class).equalTo("isActive",true).findAll());
+    }
+
+    /**
+     * 获取归档的快递单
+     * @param realm
+     * @param callback
+     */
+    public void getAllFileExpress(Realm realm,final ResultCallback<RealmResults<Express>> callback){callback.onSuccess(realm.where(Express.class).equalTo("isActive",true).findAll());
+        callback.onSuccess(realm.where(Express.class).equalTo("isActive",false).findAll());
+    }
+
     // 获取单个快递单
     public void getExpress(Realm realm,final String expNo, final ResultCallback<Express> resultCallback) {
         Express express = realm.where(Express.class).equalTo("code", expNo).findFirst();

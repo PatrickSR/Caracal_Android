@@ -1,8 +1,10 @@
 package com.patrick.caracal.presenter;
 
-import android.text.TextUtils;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.patrick.caracal.Caracal;
+import com.patrick.caracal.R;
 import com.patrick.caracal.contract.ExpressDetailsContract;
 import com.patrick.caracal.model.Express;
 
@@ -19,6 +21,7 @@ public class ExpressDetailsPresenter implements ExpressDetailsContract.Presenter
 
     private Realm realm;
 
+    private Express express;
 
     public ExpressDetailsPresenter(ExpressDetailsContract.View view,String expCode) {
         view.setPresenter(this);
@@ -44,12 +47,16 @@ public class ExpressDetailsPresenter implements ExpressDetailsContract.Presenter
         Caracal.getInstance().getExpress(realm,expCode, new Caracal.ResultCallback<Express>() {
             @Override
             public void onSuccess(Express express) {
+
+                ExpressDetailsPresenter.this.express = express;
                 //加载adapter
                 view.setupDetails(
                         express.traces,
                         express.code,
                         express.companyName,
                         express.remark);
+
+                setupMenu();
             }
 
             @Override
@@ -63,4 +70,64 @@ public class ExpressDetailsPresenter implements ExpressDetailsContract.Presenter
     public void stop() {
         realm.close();
     }
+
+    /**
+     * 设置菜单栏
+     */
+    private void setupMenu(){
+        if (express.isActive){
+            //活跃的快递单
+            view.setupMenu(R.menu.menu_details_active,menuItemClickListener );
+
+        }else {
+            //已归档的快递单
+            view.setupMenu(R.menu.menu_details_file,menuItemClickListener);
+        }
+    }
+
+    /**
+     * 归档当前的快递单
+     */
+    private void fileTheExpress(){
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                express.isActive = false;
+
+                view.goBack();
+            }
+        });
+    }
+
+    /**
+     * 把归档的快递单移到活跃中
+     */
+    private void activeTheExpress(){
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                express.isActive = true;
+
+                view.goBack();
+            }
+        });
+    }
+
+    private final Toolbar.OnMenuItemClickListener menuItemClickListener = new Toolbar.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()){
+                case R.id.action_del:
+                    attemptDelete();
+                    break;
+                case R.id.action_file:
+                    fileTheExpress();
+                    break;
+                case R.id.action_active:
+                    activeTheExpress();
+                    break;
+            }
+            return true;
+        }
+    };
 }

@@ -1,23 +1,18 @@
 package com.patrick.caracal.ui.fragment;
 
-import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.patrick.caracal.R;
-import com.patrick.caracal.activity.QueryExpressActivity;
 import com.patrick.caracal.adapter.ExpressAdapter;
-
 import com.patrick.caracal.adapter.OnItemClickListener;
 import com.patrick.caracal.contract.HomeContract;
 import com.patrick.caracal.event.StartFragmentEvent;

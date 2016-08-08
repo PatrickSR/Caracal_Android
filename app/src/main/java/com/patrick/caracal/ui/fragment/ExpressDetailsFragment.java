@@ -1,13 +1,13 @@
 package com.patrick.caracal.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.MenuRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -71,25 +71,17 @@ public class ExpressDetailsFragment extends BaseBackFragment implements ExpressD
     private void initToolbar(){
         initToolbarNav(toolbar);
         toolbar.setTitle("查看详情");
-        initMenu();
     }
 
-    /**
-     * 初始化右上角menu
-     */
-    private void initMenu() {
-        toolbar.inflateMenu(R.menu.menu_details_fragment);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.action_del:
-                        presenter.attemptDelete();
-                        break;
-                }
-                return true;
-            }
-        });
+    @Override
+    public void setupMenu(@MenuRes int menu, Toolbar.OnMenuItemClickListener listener) {
+        toolbar.inflateMenu(menu);
+        toolbar.setOnMenuItemClickListener(listener);
+    }
+
+    @Override
+    public void goBack() {
+        _mActivity.onBackPressed();
     }
 
     @Override
@@ -118,16 +110,13 @@ public class ExpressDetailsFragment extends BaseBackFragment implements ExpressD
                 .show();
     }
 
-//    @Override
-//    public void hideDelDialog() {
-//
-//    }
-
     @Override
     public void setupDetails(RealmList<Trace> traces,String code,String companyName,String remark) {
         TimeLineAdapter adapter = new TimeLineAdapter(getContext(),traces,genHeaderView(code,companyName,remark));
         view_timeline.setAdapter(adapter);
     }
+
+
 
     /**
      * 组装Header

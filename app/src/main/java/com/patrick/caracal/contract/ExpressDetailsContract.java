@@ -1,5 +1,8 @@
 package com.patrick.caracal.contract;
 
+import android.support.annotation.MenuRes;
+import android.support.v7.widget.Toolbar;
+
 import com.patrick.caracal.BasePresenter;
 import com.patrick.caracal.BaseView;
 import com.patrick.caracal.model.Trace;
@@ -22,6 +25,13 @@ public interface ExpressDetailsContract {
 //        void hideDelDialog();
 
         void setupDetails(RealmList<Trace> traces,String code,String companyName,String remark);
+
+        void setupMenu(@MenuRes int menu, Toolbar.OnMenuItemClickListener listener);
+
+        /**
+         * 返回上一层
+         */
+        void goBack();
 
     }
 
