@@ -3,9 +3,7 @@ package com.patrick.caracal;
 import android.app.Application;
 
 import com.jiongbull.jlog.JLog;
-
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
+import com.umeng.socialize.PlatformConfig;
 
 /**
  * Created by patrick on 16-6-14.
@@ -16,10 +14,9 @@ public class CaracalApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         initJLog();
+        initUMeng();
 
-//        initRealmDB();
         Caracal.init(this);
         Caracal.getInstance().importCompanyFromRAW();
     }
@@ -31,6 +28,11 @@ public class CaracalApp extends Application {
         JLog.init(this)
                 .setDebug(true)
                 .writeToFile(false);
+    }
+
+    private void initUMeng(){
+
+        PlatformConfig.setQQZone("1105546197", "KEYd4rl6yDEfzk6BYvN");
     }
 
 }
