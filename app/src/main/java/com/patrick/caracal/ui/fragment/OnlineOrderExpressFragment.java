@@ -12,6 +12,8 @@ import me.yokeyword.fragmentation_swipeback.SwipeBackFragment;
 
 /**
  * Created by Patrick on 16/8/8.
+ *
+ * 在线下单寄快递
  */
 public class OnlineOrderExpressFragment extends SwipeBackFragment {
 
