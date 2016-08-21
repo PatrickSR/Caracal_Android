@@ -1,7 +1,9 @@
 package com.patrick.caracal.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.patrick.caracal.Caracal;
 import com.patrick.caracal.R;
 import com.patrick.caracal.event.StartFragmentEvent;
 import com.patrick.caracal.presenter.ActivePresenter;
@@ -45,6 +47,12 @@ public class MainActivity extends SupportActivity {
     protected void onStart() {
         super.onStart();
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Caracal.getInstance().onActivityResult(requestCode, resultCode, data);
     }
 
     /**

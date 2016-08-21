@@ -1,6 +1,8 @@
 package com.patrick.caracal;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.support.annotation.RawRes;
 import android.text.TextUtils;
@@ -9,12 +11,16 @@ import com.jiongbull.jlog.JLog;
 import com.patrick.caracal.model.Company;
 import com.patrick.caracal.model.Express;
 import com.patrick.caracal.net.Api;
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -37,8 +43,11 @@ public class Caracal {
 
     private Api api;
 
+    private UMShareAPI umShareAPI;
+
     private Caracal(Context context) {
         api = new Api();
+        umShareAPI = UMShareAPI.get(context);
         this.context = context;
     }
 
@@ -60,6 +69,66 @@ public class Caracal {
 
 
     /**
+     * 使用QQ登陆
+     * @param activity
+     */
+    public void loginQQ(final Activity activity, final LoginCallback callback){
+
+        SHARE_MEDIA platform = SHARE_MEDIA.QQ;
+        umShareAPI.doOauthVerify(activity, platform, new UMAuthListener() {
+            @Override
+            public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
+            umShareAPI.getPlatformInfo(activity, SHARE_MEDIA.QQ, new UMAuthListener() {
+                @Override
+                public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+                    JLog.d("QQ Login get info："+map.toString());
+
+                    String name = map.get("screen_name");
+                    String avatarUrl = map.get("profile_image_url");
+                    String openid = map.get("openid");
+
+                    if (name !=null && avatarUrl != null){
+                        callback.loginSuccess(name,avatarUrl,map);
+                    }else{
+                        callback.loginFail();
+                    }
+
+                }
+
+                @Override
+                public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+                    JLog.e("登陆Error -> ",throwable);
+                    callback.loginError();
+                }
+
+                @Override
+                public void onCancel(SHARE_MEDIA share_media, int i) {
+                    callback.loginCancel();
+                }
+            });
+            }
+
+            @Override
+            public void onError(SHARE_MEDIA platform, int action, Throwable t) {
+                JLog.e("登陆Error -> ",t);
+                callback.loginError();
+            }
+
+            @Override
+            public void onCancel(SHARE_MEDIA platform, int action) {
+                callback.loginCancel();
+            }
+        });
+    }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        //所有的activity的回调，都经过Caracal然后再判断
+
+        umShareAPI.onActivityResult(requestCode,resultCode,data);
+    }
+
+    /**
      * 添加/订阅 快递
      */
     public void subExpress(final String expNo,
@@ -79,7 +148,6 @@ public class Caracal {
                 Realm realm = Realm.getDefaultInstance();
 
                 //订阅成功后，保存到DB上
-                realm = Realm.getDefaultInstance();
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
@@ -372,4 +440,31 @@ public class Caracal {
         void onFail(Exception e);
     }
 
+    /**
+     * 登陆之后的回调
+     */
+    public interface LoginCallback{
+        /**
+         * 登陆成功
+         * @param name
+         * @param avatarUrl
+         * @param info
+         */
+        void loginSuccess(String name,String avatarUrl,Map<String, String> info);
+
+        /**
+         * 登陆失败（缺少关键信息的情况）
+         */
+        void loginFail();
+
+        /**
+         * 登陆错误
+         */
+        void loginError();
+
+        /**
+         * 用户主动取消登陆
+         */
+        void loginCancel();
+    }
 }
