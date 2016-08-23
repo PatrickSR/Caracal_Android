@@ -3,9 +3,7 @@ package com.patrick.caracal;
 import android.app.Application;
 
 import com.jiongbull.jlog.JLog;
-
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
+import com.wilddog.client.Wilddog;
 
 /**
  * Created by patrick on 16-6-14.
@@ -18,10 +16,18 @@ public class CaracalApp extends Application {
         super.onCreate();
 
         initJLog();
+        initWilddog();
 
 //        initRealmDB();
         Caracal.init(this);
         Caracal.getInstance().importCompanyFromRAW();
+    }
+
+    /**
+     * 初始化Wilddog
+     */
+    private void initWilddog() {
+        Wilddog.setAndroidContext(this);
     }
 
     /**

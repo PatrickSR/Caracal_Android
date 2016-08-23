@@ -6,10 +6,15 @@ import android.support.annotation.RawRes;
 import android.text.TextUtils;
 
 import com.jiongbull.jlog.JLog;
+import com.patrick.caracal.event.WRegisterEvent;
 import com.patrick.caracal.model.Company;
 import com.patrick.caracal.model.Express;
 import com.patrick.caracal.net.Api;
+import com.wilddog.client.AuthData;
+import com.wilddog.client.Wilddog;
+import com.wilddog.client.WilddogError;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,6 +33,12 @@ import okhttp3.Response;
  * Created by Patrick on 16/7/26.
  */
 public class Caracal {
+
+    //Wilddog 应用地址
+    public static final String WILDDOG_URL = "https://caracal.wilddogio.com";
+
+    //QQ App ID 用于登录
+    private static final String QQ_APPID = "1105546197";
 
     private static Caracal caracal;
 
@@ -58,6 +69,58 @@ public class Caracal {
         Realm.setDefaultConfiguration(config);
     }
 
+    /**
+     * 使用QQ登录
+     */
+    public void authWithQQ(){
+
+    }
+
+    /**
+     * 使用邮箱密码登录
+     */
+    public void authWithEmail(String email,String password){
+        Wilddog loginRef = new Wilddog(WILDDOG_URL);
+        loginRef.authWithPassword(email, password, new Wilddog.AuthResultHandler() {
+            @Override
+            public void onAuthenticated(AuthData authData) {
+                JLog.d("onAuthenticated: " + authData.toString());
+
+                //保存到RealmDB
+
+                Realm realm = Realm.getDefaultInstance();
+
+            }
+
+            @Override
+            public void onAuthenticationError(WilddogError wilddogError) {
+                JLog.e("onAuthenticationError");
+                JLog.e(wilddogError.toException());
+
+            }
+        });
+    }
+
+    /**
+     * 注册一个邮箱用户
+     * @param email 邮箱是唯一的
+     * @param password 密码
+     */
+    public void regWithEmail(final String email, final String password){
+        Wilddog regRef = new Wilddog(WILDDOG_URL);
+        regRef.createUser(email, password, new Wilddog.ResultHandler() {
+            @Override
+            public void onSuccess() {
+                //注册成功
+                EventBus.getDefault().post(new WRegisterEvent(WRegisterEvent.STATE.SUCCESS));
+            }
+
+            @Override
+            public void onError(WilddogError wilddogError) {
+                EventBus.getDefault().post(new WRegisterEvent(WRegisterEvent.STATE.FAIL,wilddogError));
+            }
+        });
+    }
 
     /**
      * 添加/订阅 快递
@@ -79,7 +142,6 @@ public class Caracal {
                 Realm realm = Realm.getDefaultInstance();
 
                 //订阅成功后，保存到DB上
-                realm = Realm.getDefaultInstance();
                 realm.executeTransaction(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {
