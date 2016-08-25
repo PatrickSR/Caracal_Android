@@ -17,7 +17,6 @@ public class CaracalApp extends Application {
 
         initJLog();
         initWilddog();
-
 //        initRealmDB();
         Caracal.init(this);
         Caracal.getInstance().importCompanyFromRAW();

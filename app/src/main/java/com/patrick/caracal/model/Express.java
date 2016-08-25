@@ -14,7 +14,12 @@ public class Express extends RealmObject{
     public static final int STATE_RECEIVED = 3;
     public static final int STATE_PROBLEM = 4;
 
+    /**
+     * 由 [companyCode] + [code] 生成
+     */
     @PrimaryKey
+    public String no;
+
     public String code; //单号
 
     public String companyCode; //公司编码

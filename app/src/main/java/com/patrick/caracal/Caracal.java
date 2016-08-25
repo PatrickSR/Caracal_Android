@@ -9,7 +9,9 @@ import com.jiongbull.jlog.JLog;
 import com.patrick.caracal.event.WRegisterEvent;
 import com.patrick.caracal.model.Company;
 import com.patrick.caracal.model.Express;
+import com.patrick.caracal.model.TraceList;
 import com.patrick.caracal.net.Api;
+import com.patrick.caracal.net.WilddogApi;
 import com.wilddog.client.AuthData;
 import com.wilddog.client.Wilddog;
 import com.wilddog.client.WilddogError;
@@ -329,7 +331,67 @@ public class Caracal {
         }
     }
 
+    private void updateExpressFromWilddog(String... list) {
+        WilddogApi wilddogApi = new WilddogApi();
 
+        for (String no:
+                list) {
+            wilddogApi.queryExpress(no, new WilddogApi.Callback() {
+                @Override
+                public void onSuccess(JSONObject json) {
+                    updateExpressToRealm(json);
+                }
+
+                @Override
+                public void onFail(Exception e) {
+                    JLog.e("refresh from wilddog error "+e);
+                }
+            });
+        }
+    }
+
+    private void updateTraceFromWilddog(String... list){
+        WilddogApi wilddogApi = new WilddogApi();
+        for (String no :
+                list) {
+            wilddogApi.queryTrace(no, new WilddogApi.Callback() {
+                @Override
+                public void onSuccess(JSONObject json) {
+                    updateTraceListToRealm(json);
+                }
+
+                @Override
+                public void onFail(Exception e) {
+                    JLog.e("Update Trace From Wilddog "+e);
+                }
+            });
+
+        }
+    }
+
+    private void updateExpressToRealm(final JSONObject jsonObject){
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.createOrUpdateObjectFromJson(Express.class,jsonObject);
+                realm.close();
+            }
+        });
+    }
+
+    private void updateTraceListToRealm(final JSONObject jsonObject){
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.createOrUpdateObjectFromJson(TraceList.class,jsonObject);
+
+                realm.close();
+            }
+        });
+    }
 
     /**
      * 从raw导入公司信息
