@@ -22,12 +22,13 @@ public class OwnPresenter implements OwnContract.Presenter{
     public OwnPresenter(OwnContract.View view){
         view.setPresenter(this);
         this.view = view;
+
+        realm = Realm.getDefaultInstance();
+        userResult = realm.where(User.class).findAll();
     }
 
     @Override
     public void start() {
-        realm = Realm.getDefaultInstance();
-        userResult = realm.where(User.class).findAll();
         checkAuthState();
     }
 

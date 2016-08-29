@@ -70,7 +70,17 @@ public class OwnFragment extends SupportFragment implements OwnContract.View{
     @Override
     public void onResume() {
         super.onResume();
-        presenter.checkAuthState();
+        if (presenter!=null) {
+            presenter.start();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (presenter!=null){
+            presenter.stop();
+        }
+        super.onDestroy();
     }
 
     private void initView(View view) {

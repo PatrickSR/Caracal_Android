@@ -44,17 +44,6 @@ public class ActiveFragment extends BaseFragment implements SwipeRefreshLayout.O
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout mRefreshLayout;
 
-//    @BindView(R.id.multiple_actions)
-//    FloatingActionsMenu multiple_actions;
-//
-//    @OnClick(R.id.add_express)
-//    void manualAddExpressNumber() {
-//        Intent intent = new Intent(getActivity(), QueryExpressActivity.class);
-//            startActivityForResult(intent, 100);
-//
-//        multiple_actions.collapse();
-//    }
-
     private HomeContract.ActiveContract.Presenter presenter;
 
     private boolean mInAtTop = true;

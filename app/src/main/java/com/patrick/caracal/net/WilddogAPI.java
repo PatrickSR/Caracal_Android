@@ -52,18 +52,11 @@ public class WilddogApi {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    try {
+                    //DataSnapshot to json
+                    JSONObject json = new JSONObject((Map) dataSnapshot.getValue());
+                    System.out.println(json.toString());
+                    callback.onSuccess(json);
 
-                        JSONObject json = new JSONObject();
-                        json.put(dataSnapshot.getKey(), new JSONObject((Map) dataSnapshot.getValue()));
-                        System.out.println(json.toString());
-
-                        callback.onSuccess(json);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-//                        callback.onFail(e);
-                    }
                 }
             }
 

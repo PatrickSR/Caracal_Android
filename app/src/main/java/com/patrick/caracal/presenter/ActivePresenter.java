@@ -5,6 +5,9 @@ import com.patrick.caracal.Caracal;
 import com.patrick.caracal.contract.HomeContract;
 import com.patrick.caracal.model.Express;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -31,19 +34,16 @@ public class ActivePresenter implements HomeContract.ActiveContract.Presenter {
 
         RealmResults<Express> results = realm.where(Express.class).notEqualTo("state", 3).findAll();
 
-        //刷新全部快递
-        Caracal.getInstance().refresh(results,new Caracal.ResultCallback() {
-            @Override
-            public void onSuccess(Object o) {
-                view.closeRefresh();
-            }
+        //获取需要刷新的快递列表
+        List<String> needRefreshNo = new ArrayList<>();
 
-            @Override
-            public void onFail(Exception e) {
-                view.closeRefresh();
-                JLog.e(e);
-            }
-        });
+        for (Express exp:
+                results) {
+            needRefreshNo.add(exp.no);
+        }
+
+        //刷新全部快递
+        Caracal.getInstance().refresh(needRefreshNo);
     }
 
 
@@ -83,7 +83,6 @@ public class ActivePresenter implements HomeContract.ActiveContract.Presenter {
         public void onChange(RealmResults<Express> element) {
             //如果数据发生变化
             //关闭刷新的view
-
             if (view != null){
                 view.closeRefresh();
             }

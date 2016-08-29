@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -205,26 +206,22 @@ public class Caracal {
                 String resp = response.body().string();
                 Realm realm = Realm.getDefaultInstance();
 
-                //订阅成功后，保存到DB上
-                realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
+                realm.beginTransaction();
+                Express express = new Express();
+                express.no = companyCode+expNo;
+                express.code =expNo;
+                express.companyCode = companyCode;
+                express.companyName = companyName;
 
-                        Express express = new Express();
-                        express.code =expNo;
-                        express.companyCode = companyCode;
-                        express.companyName = companyName;
+                if (TextUtils.isEmpty(remark)){
+                    express.remark = companyName + " " +expNo;
+                }else{
+                    express.remark = remark;
+                }
+                realm.copyToRealmOrUpdate(express);
 
-                        if (TextUtils.isEmpty(remark)){
-                            express.remark = companyName + " " +expNo;
-                        }else{
-                            express.remark = remark;
-                        }
-                        realm.copyToRealmOrUpdate(express);
-
-                        realm.close();
-                    }
-                });
+                realm.commitTransaction();
+                realm.close();
                 resultCallback.onSuccess(resp);
             }
         });
@@ -340,8 +337,31 @@ public class Caracal {
      * 从Realm里面获取全部单号，然后单独发送请求Get最新的状态
      * 仅仅获取 state != 3的单号，因为这些是还没完成的快递单
      */
-    public void refresh(RealmResults<Express> results,ResultCallback callback) {
-        networkRefresh(results,callback);
+    public void refresh(List<String> expNos) {
+
+        WilddogApi wilddogApi = new WilddogApi();
+        for (final String no :
+                expNos) {
+            wilddogApi.queryExpress(no, new WilddogApi.Callback() {
+                @Override
+                public void onSuccess(JSONObject json) {
+                    JLog.d("refresh express success -> "+json);
+
+                    Realm realm = Realm.getDefaultInstance();
+                    realm.beginTransaction();
+
+                    realm.createOrUpdateObjectFromJson(Express.class,json);
+                    realm.commitTransaction();
+                    realm.close();
+
+                }
+
+                @Override
+                public void onFail(Exception e) {
+                    JLog.e("refresh express error -> no: "+no,e);
+                }
+            });
+        }
     }
 
     /**

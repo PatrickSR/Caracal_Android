@@ -51,6 +51,7 @@ public class Api {
      * @param expNo   快递单号
      * @param company 快递公司编号
      */
+    @Deprecated
     public void query(String expNo, String company, Callback callback) {
         String url = QUERY_URL + "/" + company + "/" + expNo;
 
