@@ -24,6 +24,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     //跳转快递公司RequestCode
     public static final int SELECT_REQ_CODE = 200;
 
+    protected Realm realm;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,10 +34,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         //通过Butter Knife绑定布局上的控件
         ButterKnife.bind(this);
 
+        //获取Realm
+        realm = Realm.getDefaultInstance();
     }
 
     @Override
     protected void onDestroy() {
+        realm.close();
         super.onDestroy();
     }
 
@@ -66,5 +71,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
+    protected void closeLoadding(){
+
+    }
 
 }

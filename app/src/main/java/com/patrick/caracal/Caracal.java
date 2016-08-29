@@ -6,10 +6,11 @@ import android.support.annotation.RawRes;
 import android.text.TextUtils;
 
 import com.jiongbull.jlog.JLog;
-import com.patrick.caracal.event.WRegisterEvent;
+import com.patrick.caracal.event.AuthEvent;
 import com.patrick.caracal.model.Company;
 import com.patrick.caracal.model.Express;
 import com.patrick.caracal.model.TraceList;
+import com.patrick.caracal.model.User;
 import com.patrick.caracal.net.Api;
 import com.patrick.caracal.net.WilddogApi;
 import com.wilddog.client.AuthData;
@@ -80,31 +81,61 @@ public class Caracal {
 
     /**
      * 使用邮箱密码登录
+     *
      */
-    public void authWithEmail(String email,String password){
-        Wilddog loginRef = new Wilddog(WILDDOG_URL);
-        loginRef.authWithPassword(email, password, new Wilddog.AuthResultHandler() {
+    public void authWithEmail(final String email,final String password){
+        WilddogApi wilddogApi = new WilddogApi();
+        wilddogApi.loginEmail(email, password, new Wilddog.AuthResultHandler() {
             @Override
             public void onAuthenticated(AuthData authData) {
-                JLog.d("onAuthenticated: " + authData.toString());
+                //登录成功
+                EventBus.getDefault().post(new AuthEvent(AuthEvent.STATE.LOGIN_SUCCESS));
 
-                //保存到RealmDB
-
-                Realm realm = Realm.getDefaultInstance();
-
+                String uid = authData.getUid();
+                switch (authData.getProvider()){
+                    case "password":
+                        //通过邮箱+密码登录
+                        String email = (String) authData.getProviderData().get("email");
+                        loginSuccessWithEmail(uid,email);
+                        break;
+                }
             }
 
             @Override
             public void onAuthenticationError(WilddogError wilddogError) {
-                JLog.e("onAuthenticationError");
-                JLog.e(wilddogError.toException());
+                //登录失败
+                JLog.e("登录失败",wilddogError.toException());
+                EventBus.getDefault().post(new AuthEvent(AuthEvent.STATE.LOGIN_FAIL));
+                //如果是未注册的用户，进行注册
+                switch (wilddogError.getCode()){
+                    case WilddogError.INVALID_EMAIL:
+                        regWithEmail(email,password);
+                        break;
 
+                }
             }
         });
     }
 
     /**
+     * 通过邮箱登录成功后，保存用户信息
+     * @param uid
+     * @param email
+     */
+    private void loginSuccessWithEmail(String uid,String email){
+        final User user = new User(uid);
+        user.email = email;
+        Realm realm = Realm.getDefaultInstance();
+        //保存
+        realm.beginTransaction();
+        realm.insertOrUpdate(user);
+        realm.commitTransaction();
+
+    }
+
+    /**
      * 注册一个邮箱用户
+     * 如果不提供回调
      * @param email 邮箱是唯一的
      * @param password 密码
      */
@@ -114,12 +145,14 @@ public class Caracal {
             @Override
             public void onSuccess() {
                 //注册成功
-                EventBus.getDefault().post(new WRegisterEvent(WRegisterEvent.STATE.SUCCESS));
+                EventBus.getDefault().post(new AuthEvent(AuthEvent.STATE.REG_SUCCESS));
+                authWithEmail(email, password);
+
             }
 
             @Override
             public void onError(WilddogError wilddogError) {
-                EventBus.getDefault().post(new WRegisterEvent(WRegisterEvent.STATE.FAIL,wilddogError));
+                EventBus.getDefault().post(new AuthEvent(AuthEvent.STATE.REG_FAIL,wilddogError));
             }
         });
     }

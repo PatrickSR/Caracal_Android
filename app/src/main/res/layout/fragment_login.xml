@@ -28,14 +28,15 @@
             android:src="@drawable/mock_logo" />
 
         <TextView
-            android:layout_marginTop="10dp"
-            android:textSize="20sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="欢迎登录" />
+            android:layout_marginTop="10dp"
+            android:text="欢迎登录"
+            android:textSize="20sp" />
 
         <android.support.design.widget.TextInputEditText
+            android:id="@+id/et_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -45,6 +46,7 @@
             app:et_dividerColor="#ccc" />
 
         <android.support.design.widget.TextInputEditText
+            android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -54,11 +56,12 @@
             app:et_dividerColor="#ccc" />
 
         <com.rey.material.widget.Button
+            android:id="@+id/btn_login_with_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@color/colorPrimary"
-            android:text="登录"
+            android:text="登录/注册"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             app:rd_backgroundColor="@color/colorPrimaryDark"
@@ -66,22 +69,22 @@
             app:rd_rippleColor="@color/colorPrimary" />
 
         <RelativeLayout
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:text="忘记密码?" />-->
+
+
             <TextView
-                android:text="忘记密码?"
-                android:layout_alignParentLeft="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-
-            <TextView
-                android:text="注册新用户"
-                android:textColor="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:text="忘记密码?" />
         </RelativeLayout>
 
         <FrameLayout
@@ -96,10 +99,10 @@
                 android:background="#ccc" />
 
             <TextView
-                android:text="OR"
-                android:layout_gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="OR" />
 
             <View
                 android:layout_width="120dp"

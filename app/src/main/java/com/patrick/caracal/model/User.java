@@ -15,4 +15,11 @@ public class User extends RealmObject {
 
     public String avatar;
 
+    public String email;
+
+    public User(){}
+
+    public User(String uid) {
+        this.uid = uid;
+    }
 }
