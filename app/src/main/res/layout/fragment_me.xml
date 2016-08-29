@@ -7,59 +7,76 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/transparent"
+        android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay"
         app:titleTextAppearance="@style/Toolbar_TextAppearance_White"/>
 
-    <FrameLayout
+    <LinearLayout
+        android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="350dp">
-        <LinearLayout
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/bg_grey">
+        <RelativeLayout
+            android:layout_marginTop="26dp"
+            android:background="@android:color/white"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <!--背景-->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:background="@color/colorPrimary"/>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_marginTop="40dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_margin="20dp"
-                    android:id="@+id/userName"
-                    android:gravity="center"
-                    android:text="Patrick"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/login"
-                    android:gravity="center"
-                    android:text="QQ登陆"
-                    android:textSize="20sp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/userAvatar"
-            android:layout_width="80dp"
             android:layout_height="80dp"
-            android:background="@drawable/circel_marker_normal"
-            android:layout_gravity="center" />
+            android:paddingLeft="10dp">
+            <ImageView
+                android:id="@+id/userAvatar"
+                android:layout_margin="10dp"
+                android:background="@drawable/shape_gray_round"
+                android:layout_width="60dp"
+                android:layout_height="60dp" />
 
-    </FrameLayout>
+            <TextView
+                android:id="@+id/userName"
+                android:layout_marginTop="10dp"
+                android:layout_alignTop="@id/userAvatar"
+                android:layout_toRightOf="@id/userAvatar"
+                android:text="登录/注册"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_marginBottom="10dp"
+                android:layout_alignBottom="@id/userAvatar"
+                android:layout_toRightOf="@id/userAvatar"
+                android:text="登录后可以同步快递记录"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginTop="26dp"
+            android:background="@android:color/white"
+            android:layout_width="match_parent"
+            android:paddingLeft="10dp"
+            android:layout_height="80.5dp">
+                <TextView
+                    android:layout_marginLeft="10dp"
+                    android:drawableLeft="@drawable/ic_cloud"
+                    android:text="  检测更新"
+                    android:gravity="center|left"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp" />
+            <View
+                android:background="@color/bg_grey"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:drawableLeft="@drawable/ic_about"
+                android:text="  关于我们"
+                android:gravity="center|left"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+        </LinearLayout>
+    </LinearLayout>
+
 
 </RelativeLayout>
