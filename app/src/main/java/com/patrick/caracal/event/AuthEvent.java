@@ -11,7 +11,8 @@ public class AuthEvent {
         REG_SUCCESS,
         REG_FAIL,
         LOGIN_SUCCESS,
-        LOGIN_FAIL
+        LOGIN_FAIL,
+        QQ_LOGIN_FAIL
     }
 
     public STATE state;

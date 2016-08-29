@@ -19,6 +19,7 @@
         android:orientation="vertical"
         android:background="@color/bg_grey">
         <RelativeLayout
+            android:id="@+id/userframe"
             android:layout_marginTop="26dp"
             android:background="@android:color/white"
             android:layout_width="match_parent"
@@ -31,22 +32,7 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp" />
 
-            <TextView
-                android:id="@+id/userName"
-                android:layout_marginTop="10dp"
-                android:layout_alignTop="@id/userAvatar"
-                android:layout_toRightOf="@id/userAvatar"
-                android:text="登录/注册"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
 
-            <TextView
-                android:layout_marginBottom="10dp"
-                android:layout_alignBottom="@id/userAvatar"
-                android:layout_toRightOf="@id/userAvatar"
-                android:text="登录后可以同步快递记录"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
         </RelativeLayout>
 
         <LinearLayout

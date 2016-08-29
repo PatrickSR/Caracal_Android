@@ -41,7 +41,7 @@ public class Caracal {
     public static final String WILDDOG_URL = "https://caracal.wilddogio.com";
 
     //QQ App ID 用于登录
-    private static final String QQ_APPID = "1105546197";
+    public static final String QQ_APPID = "1105546197";
 
     private static Caracal caracal;
 
@@ -75,8 +75,21 @@ public class Caracal {
     /**
      * 使用QQ登录
      */
-    public void authWithQQ(){
+    public void authWithQQ(String accessToken,String openId){
+        WilddogApi wilddogApi = new WilddogApi();
+        wilddogApi.loginQQ(accessToken, openId, new Wilddog.AuthResultHandler() {
+            @Override
+            public void onAuthenticated(AuthData authData) {
+                JLog.d("QQ Login Success");
 
+            }
+
+            @Override
+            public void onAuthenticationError(WilddogError wilddogError) {
+                JLog.d("QQ Login Error");
+                EventBus.getDefault().post(new AuthEvent(AuthEvent.STATE.QQ_LOGIN_FAIL));
+            }
+        });
     }
 
     /**
@@ -118,6 +131,18 @@ public class Caracal {
     }
 
     /**
+     * 通过QQ登录成功
+     */
+    private void loginSuccessWithQQ(String uid,String name,String avatarurl){
+        User user = new User(uid);
+        user.uid = uid;
+        user.name = name;
+        user.avatar = avatarurl;
+
+        saveUserData(user);
+    }
+
+    /**
      * 通过邮箱登录成功后，保存用户信息
      * @param uid
      * @param email
@@ -125,12 +150,16 @@ public class Caracal {
     private void loginSuccessWithEmail(String uid,String email){
         final User user = new User(uid);
         user.email = email;
+        saveUserData(user);
+    }
+
+    private void saveUserData(User user){
         Realm realm = Realm.getDefaultInstance();
         //保存
         realm.beginTransaction();
         realm.insertOrUpdate(user);
         realm.commitTransaction();
-
+        realm.close();
     }
 
     /**

@@ -1,8 +1,6 @@
 package com.patrick.caracal.net;
 
-import com.jiongbull.jlog.JLog;
 import com.patrick.caracal.model.Express;
-import com.wilddog.client.AuthData;
 import com.wilddog.client.DataSnapshot;
 import com.wilddog.client.ValueEventListener;
 import com.wilddog.client.Wilddog;
@@ -11,9 +9,8 @@ import com.wilddog.client.WilddogError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import io.realm.Realm;
 
 /**
  * Created by Patrick on 16/8/25.
@@ -28,7 +25,14 @@ public class WilddogApi {
     /**
      * QQ登录
      */
-    public void loginQQ() {
+    public void loginQQ(String accessToken,String openId, Wilddog.AuthResultHandler qqLoginCallback) {
+        Wilddog loginRef = new Wilddog(WILDDOG_URL);
+
+        Map<String, String> options = new HashMap<>();
+        options.put("access_token", accessToken);
+        options.put("openId", openId);
+
+        loginRef.authWithOAuthToken("qq",options,qqLoginCallback);
     }
 
     /**
