@@ -6,7 +6,6 @@ import com.wilddog.client.ValueEventListener;
 import com.wilddog.client.Wilddog;
 import com.wilddog.client.WilddogError;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -76,17 +75,12 @@ public class WilddogApi {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    try {
 
-                        JSONObject json = new JSONObject();
-                        json.put(dataSnapshot.getKey(), new JSONObject((Map) dataSnapshot.getValue()));
-                        System.out.println(json.toString());
+                    JSONObject json = new JSONObject((Map) dataSnapshot.getValue());
+                    System.out.println(json.toString());
 
-                        callback.onSuccess(json);
+                    callback.onSuccess(json);
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
 

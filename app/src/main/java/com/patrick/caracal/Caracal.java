@@ -18,7 +18,6 @@ import com.wilddog.client.Wilddog;
 import com.wilddog.client.WilddogError;
 
 import org.greenrobot.eventbus.EventBus;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -275,12 +274,30 @@ public class Caracal {
         callback.onSuccess(realm.where(Express.class).equalTo("isActive",false).findAll());
     }
 
-    // 获取单个快递单
-    public void getExpress(Realm realm,final String expNo, final ResultCallback<Express> resultCallback) {
-        Express express = realm.where(Express.class).equalTo("code", expNo).findFirst();
 
-        if (express == null) resultCallback.onFail(new RealmException("找不到快递单：" + expNo));
-        else resultCallback.onSuccess(express);
+//    public void getExpress(Realm realm,final String expNo, final ResultCallback<Express> resultCallback) {
+
+    /**
+     * 获取单个快递单
+     * @param realm
+     * @param expNo 快递单号
+     * @return 如果找不到快递的数据，返回null
+     */
+    public Express getExpress(Realm realm, String expNo) {
+        return realm.where(Express.class).equalTo("no", expNo).findFirst();
+
+//        if (express == null) resultCallback.onFail(new RealmException("找不到快递单：" + expNo));
+//        else resultCallback.onSuccess(express);
+    }
+
+    /**
+     * 获取单个快递跟踪信息
+     * @param realm
+     * @param expNo
+     * @return 如果找不到快递的数据，返回null
+     */
+    public TraceList getTraceList(Realm realm,String expNo){
+        return realm.where(TraceList.class).equalTo("no",expNo).findFirst();
     }
 
     // 查询快递属于哪个公司
@@ -339,81 +356,36 @@ public class Caracal {
      */
     public void refresh(List<String> expNos) {
 
-        WilddogApi wilddogApi = new WilddogApi();
-        for (final String no :
-                expNos) {
-            wilddogApi.queryExpress(no, new WilddogApi.Callback() {
-                @Override
-                public void onSuccess(JSONObject json) {
-                    JLog.d("refresh express success -> "+json);
+//        WilddogApi wilddogApi = new WilddogApi();
+//        for (final String no :
+//                expNos) {
+//            wilddogApi.queryExpress(no, new WilddogApi.Callback() {
+//                @Override
+//                public void onSuccess(JSONObject json) {
+//                    JLog.d("refresh express success -> "+json);
+//
+//                    Realm realm = Realm.getDefaultInstance();
+//                    realm.beginTransaction();
+//
+//                    realm.createOrUpdateObjectFromJson(Express.class,json);
+//                    realm.commitTransaction();
+//                    realm.close();
+//
+//                }
+//
+//                @Override
+//                public void onFail(Exception e) {
+//                    JLog.e("refresh express error -> no: "+no,e);
+//                }
+//            });
+//        }
+        updateExpressFromWilddog(expNos);
+        updateTraceFromWilddog(expNos);
 
-                    Realm realm = Realm.getDefaultInstance();
-                    realm.beginTransaction();
-
-                    realm.createOrUpdateObjectFromJson(Express.class,json);
-                    realm.commitTransaction();
-                    realm.close();
-
-                }
-
-                @Override
-                public void onFail(Exception e) {
-                    JLog.e("refresh express error -> no: "+no,e);
-                }
-            });
-        }
     }
 
-    /**
-     * 进行网络刷新
-     * @param expresses
-     */
-    private void networkRefresh(RealmResults<Express> expresses,final ResultCallback callback) {
 
-        for (final Express express :
-                expresses) {
-            api.query(express.code, express.companyCode, new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    JLog.e("刷新快递失败");
-                    callback.onFail(e);
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (response.code() == 200) {
-                        final String resp = response.body().string();
-                        JLog.d("刷新快递 <---- "+resp);
-                        callback.onSuccess(null);
-
-                        if (resp.equals("null")|| TextUtils.isEmpty(resp)) return;
-
-                        try {
-                            JSONObject jsonResp = new JSONObject(resp);
-
-                            if (jsonResp.has("error")){
-                                //有错误
-                                JLog.e(jsonResp.getString("error"));
-                                return;
-                            }
-
-                            Realm realm = Realm.getDefaultInstance();
-                            realm.beginTransaction();
-
-                            realm.createOrUpdateObjectFromJson(Express.class,resp);
-                            realm.commitTransaction();
-                            realm.close();
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-        }
-    }
-
-    private void updateExpressFromWilddog(String... list) {
+    private void updateExpressFromWilddog(List<String> list) {
         WilddogApi wilddogApi = new WilddogApi();
 
         for (String no:
@@ -421,6 +393,7 @@ public class Caracal {
             wilddogApi.queryExpress(no, new WilddogApi.Callback() {
                 @Override
                 public void onSuccess(JSONObject json) {
+                    JLog.d("refresh express success -> "+json);
                     updateExpressToRealm(json);
                 }
 
@@ -432,13 +405,14 @@ public class Caracal {
         }
     }
 
-    private void updateTraceFromWilddog(String... list){
+    private void updateTraceFromWilddog(List<String> list){
         WilddogApi wilddogApi = new WilddogApi();
         for (String no :
                 list) {
             wilddogApi.queryTrace(no, new WilddogApi.Callback() {
                 @Override
                 public void onSuccess(JSONObject json) {
+                    JLog.d("refresh trace success -> "+json);
                     updateTraceListToRealm(json);
                 }
 
@@ -453,26 +427,19 @@ public class Caracal {
 
     private void updateExpressToRealm(final JSONObject jsonObject){
         Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.createOrUpdateObjectFromJson(Express.class,jsonObject);
-                realm.close();
-            }
-        });
+        realm.beginTransaction();
+        realm.createOrUpdateObjectFromJson(Express.class,jsonObject);
+        realm.commitTransaction();
+        realm.close();
     }
 
     private void updateTraceListToRealm(final JSONObject jsonObject){
 
         Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.createOrUpdateObjectFromJson(TraceList.class,jsonObject);
-
-                realm.close();
-            }
-        });
+        realm.beginTransaction();
+        realm.createOrUpdateObjectFromJson(TraceList.class,jsonObject);
+        realm.commitTransaction();
+        realm.close();
     }
 
     /**

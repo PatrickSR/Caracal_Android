@@ -97,7 +97,7 @@ public class SearchExpressFragment extends BaseBackFragment {
         adapter = new SearchAdapter(getContext(),realm,"code");
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(int position, View view, RecyclerView.ViewHolder viewHolder) {
+            public void onItemClick(Context context,int position, View view, RecyclerView.ViewHolder viewHolder) {
                 Bundle bundle = new Bundle();
 
                 Express exp = adapter.getData().get(position);
@@ -134,7 +134,7 @@ public class SearchExpressFragment extends BaseBackFragment {
                 @Override
                 public void onClick(View v) {
                     if (mClickListener != null) {
-                        mClickListener.onItemClick(viewHolder.getAdapterPosition(), v, viewHolder);
+                        mClickListener.onItemClick(getContext(),viewHolder.getAdapterPosition(), v, viewHolder);
                     }
                 }
             });

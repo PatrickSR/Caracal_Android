@@ -36,7 +36,7 @@ public class ExpressAdapter extends RealmRecyclerViewAdapter<Express, ExpressAda
             @Override
             public void onClick(View v) {
                 if (mClickListener != null) {
-                    mClickListener.onItemClick(viewHolder.getAdapterPosition(), v, viewHolder);
+                    mClickListener.onItemClick(context,viewHolder.getAdapterPosition(), v, viewHolder);
                 }
             }
         });

@@ -1,5 +1,7 @@
 package com.patrick.caracal.ui.fragment;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,10 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.patrick.caracal.R;
+import com.patrick.caracal.activity.DetailsActivity;
 import com.patrick.caracal.adapter.ExpressAdapter;
 import com.patrick.caracal.adapter.OnItemClickListener;
 import com.patrick.caracal.contract.HomeContract;
-import com.patrick.caracal.event.StartFragmentEvent;
 import com.patrick.caracal.event.TabSelectedEvent;
 import com.patrick.caracal.model.Express;
 import com.patrick.caracal.presenter.ActivePresenter;
@@ -197,13 +199,17 @@ public class ActiveFragment extends BaseFragment implements SwipeRefreshLayout.O
 
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(int position, View view, RecyclerView.ViewHolder viewHolder) {
+            public void onItemClick(Context context, int position, View view, RecyclerView.ViewHolder viewHolder) {
                 Bundle bundle = new Bundle();
 
                 Express exp = adapter.getData().get(position);
-                bundle.putString("expCode",exp.code);
+                bundle.putString("no",exp.no);
 
-                EventBus.getDefault().post(new StartFragmentEvent(ExpressDetailsFragment.newInstance(bundle)));
+                Intent intent = new Intent(context,DetailsActivity.class);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+
+//                EventBus.getDefault().post(new StartFragmentEvent(ExpressDetailsFragment.newInstance(bundle)));
             }
         });
     }
