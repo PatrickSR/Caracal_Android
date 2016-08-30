@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group>
+        <item
+            android:id="@+id/nav_express"
+            android:icon="@drawable/ic_express_gray"
+            android:title="快递"/>
+        <item
+            android:id="@+id/nav_send_express"
+            android:icon="@drawable/ic_send_24dp"
+            android:title="寄件"/>
+        <item
+            android:id="@+id/nav_search"
+            android:icon="@drawable/ic_search"
+            android:title="搜索"/>
+    </group>
+
+    <item android:title="地址簿">
+        <menu>
+            <item
+                android:id="@+id/nav_receiver"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="管理收件人" />
+            <item
+                android:id="@+id/nav_sender"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="管理发件人" />
+        </menu>
+    </item>
+
+    <item android:title="更多">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="分享" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_about"
+                android:title="关于" />
+        </menu>
+    </item>
+
+
+
+</menu>

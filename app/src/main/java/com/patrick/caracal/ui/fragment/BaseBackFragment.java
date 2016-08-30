@@ -18,7 +18,7 @@ public class BaseBackFragment extends SwipeBackFragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _mActivity.onBackPressed();
+                pop();
             }
         });
 

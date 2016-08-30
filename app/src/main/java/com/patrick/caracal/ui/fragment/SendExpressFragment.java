@@ -15,14 +15,14 @@ import org.greenrobot.eventbus.EventBus;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import me.yokeyword.fragmentation.SupportFragment;
+import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 /**
  * Created by 15920 on 2016/7/31.
  *
  * 发送快递
  */
-public class SendExpressFragment extends SupportFragment {
+public class SendExpressFragment extends BaseLazyMainFragment {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -39,6 +39,20 @@ public class SendExpressFragment extends SupportFragment {
         SendExpressFragment fragment = new SendExpressFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    protected FragmentAnimator onCreateFragmentAnimator() {
+
+        FragmentAnimator fragmentAnimator = _mActivity.getFragmentAnimator();
+        fragmentAnimator.setEnter(0);
+        fragmentAnimator.setExit(0);
+        return fragmentAnimator;
+    }
+
+    @Override
+    protected void initLazyView(@Nullable Bundle savedInstanceState) {
+
     }
 
     @Nullable

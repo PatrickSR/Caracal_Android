@@ -32,4 +32,8 @@
     <string name="item_logistic_code">"NO: "</string>
 
     <string name="search_hint">请输入有关快递单的内容</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

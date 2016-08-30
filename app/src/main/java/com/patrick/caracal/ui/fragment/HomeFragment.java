@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,9 +14,6 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.patrick.caracal.R;
 import com.patrick.caracal.activity.QueryExpressActivity;
 import com.patrick.caracal.adapter.HomePagerFragmentAdapter;
-import com.patrick.caracal.event.StartFragmentEvent;
-
-import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +46,7 @@ public class HomeFragment extends BaseLazyMainFragment {
         multiple_actions.collapse();
     }
 
+
     public static HomeFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -71,25 +68,35 @@ public class HomeFragment extends BaseLazyMainFragment {
     }
 
     private void setupToolbar(){
-        toolbar.inflateMenu(R.menu.menu_home_fragment);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+
+        toolbar.setNavigationIcon(R.drawable.ic_drawer_open);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.action_search:
-                        EventBus.getDefault().post(new StartFragmentEvent(SearchExpressFragment.newInstance()));
-                        break;
-
-                    case R.id.action_about:
-                        break;
-
-                    case R.id.action_update:
-                        break;
+            public void onClick(View v) {
+                if (mOpenDraweListener != null) {
+                    mOpenDraweListener.onOpenDrawer();
                 }
-
-                return true;
             }
         });
+//        toolbar.inflateMenu(R.menu.menu_home_fragment);
+//        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                switch (item.getItemId()){
+//                    case R.id.action_search:
+//                        EventBus.getDefault().post(new StartFragmentEvent(SearchExpressFragment.newInstance()));
+//                        break;
+//
+//                    case R.id.action_about:
+//                        break;
+//
+//                    case R.id.action_update:
+//                        break;
+//                }
+//
+//                return true;
+//            }
+//        });
     }
 
     @Override

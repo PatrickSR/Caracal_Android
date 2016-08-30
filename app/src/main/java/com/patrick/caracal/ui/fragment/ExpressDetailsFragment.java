@@ -79,7 +79,7 @@ public class ExpressDetailsFragment extends BaseBackFragment implements ExpressD
 
     @Override
     public void goBack() {
-        _mActivity.onBackPressed();
+        pop();
     }
 
     @Override
@@ -126,14 +126,8 @@ public class ExpressDetailsFragment extends BaseBackFragment implements ExpressD
     private View genHeaderView(String code, String companyName, String remark) {
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.item_details_header, view_timeline, false);
 
-//        if (TextUtils.isEmpty(remark)){
-//            String name = companyName + " "+ code;
-//            ((TextView)headerView.findViewById(R.id.exp_name)).setText(name);
-//        }else{
         ((TextView) headerView.findViewById(R.id.exp_name)).setText(remark);
-//            exp_code.setVisibility(View.VISIBLE);
         ((TextView) headerView.findViewById(R.id.exp_code)).setText(code);
-//        }
         ((TextView) headerView.findViewById(R.id.exp_company)).setText(companyName);
 
         return headerView;
