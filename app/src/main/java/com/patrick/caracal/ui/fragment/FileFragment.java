@@ -1,6 +1,7 @@
 package com.patrick.caracal.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,14 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.patrick.caracal.R;
+import com.patrick.caracal.activity.DetailsActivity;
 import com.patrick.caracal.adapter.ExpressAdapter;
 import com.patrick.caracal.adapter.OnItemClickListener;
 import com.patrick.caracal.contract.HomeContract;
-import com.patrick.caracal.event.StartFragmentEvent;
 import com.patrick.caracal.model.Express;
 import com.patrick.caracal.presenter.FilePresenter;
-
-import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,9 +75,11 @@ public class FileFragment extends BaseFragment implements HomeContract.FileContr
                 Bundle bundle = new Bundle();
 
                 Express exp = adapter.getData().get(position);
-                bundle.putString("expCode",exp.code);
+                bundle.putString("no",exp.no);
 
-                EventBus.getDefault().post(new StartFragmentEvent(ExpressDetailsFragment.newInstance(bundle)));
+                Intent intent = new Intent(context,DetailsActivity.class);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
             }
         });
     }

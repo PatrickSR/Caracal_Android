@@ -70,6 +70,9 @@ public class ExpressAdapter extends RealmRecyclerViewAdapter<Express, ExpressAda
         @BindView(R.id.acceptStation)
         public TextView tv_acceptStation;  //接应站点
 
+        @BindView(R.id.state)
+        public TextView tv_state;
+
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -79,6 +82,7 @@ public class ExpressAdapter extends RealmRecyclerViewAdapter<Express, ExpressAda
             setExpName(express.code, express.companyName, express.remark);
             setAcceptStation(express.lastAcceptStation);
             setAcceptTime(express.lastAcceptTime);
+            setState(express.state);
 //            setCompanyType(express.companyType);
         }
 
@@ -109,5 +113,20 @@ public class ExpressAdapter extends RealmRecyclerViewAdapter<Express, ExpressAda
             }
         }
 
+        public void setState(int state){
+            switch (state){
+                case 2:
+                    tv_state.setText("运送中");
+                    break;
+                case 3:
+                    tv_state.setText("已签收");
+                    break;
+                case 4:
+                    tv_state.setText("问题件");
+                default:
+                    tv_state.setText("未知");
+                    break;
+            }
+        }
     }
 }

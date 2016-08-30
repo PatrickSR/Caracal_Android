@@ -51,6 +51,13 @@
                 android:layout_height="wrap_content"
                 android:text="2016-08-01 23:38:28" />
 
+            <TextView
+                android:id="@+id/state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_alignParentRight="true"/>
+
         </RelativeLayout>
 
 
